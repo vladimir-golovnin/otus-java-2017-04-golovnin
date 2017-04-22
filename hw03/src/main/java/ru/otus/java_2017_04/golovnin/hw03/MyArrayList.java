@@ -45,41 +45,7 @@ public class MyArrayList<T> implements List<T>{
 
     @Override
     public Iterator<T> iterator() {
-        return new InnerItertor<>();
-    }
-
-    private class InnerItertor<T> implements Iterator<T>{
-
-        protected int cursor = 0;
-        protected int lastIterated = -1;
-
-        @Override
-        public boolean hasNext() {
-            return cursor < size();
-        }
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public T next() {
-            if (cursor < size()) {
-                T element = (T)array[cursor];
-                lastIterated = cursor;
-                cursor++;
-                return element;
-            }
-            else throw new NoSuchElementException();
-        }
-
-        @Override
-        public void remove() {
-            if(lastIterated == -1) throw new IllegalStateException();
-            else {
-                MyArrayList.this.remove(lastIterated);
-                lastIterated = -1;
-                cursor--;
-            }
-        }
-
+        return new InnerListIterator(0);
     }
 
     @Override
@@ -225,7 +191,37 @@ public class MyArrayList<T> implements List<T>{
         return new InnerListIterator(index);
     }
 
-    private class InnerListIterator extends InnerItertor<T> implements ListIterator<T>{
+    private class InnerListIterator implements ListIterator<T>{
+
+        private int cursor = 0;
+        private int lastIterated = -1;
+
+        @Override
+        public boolean hasNext() {
+            return cursor < size();
+        }
+
+        @Override
+        public void remove() {
+            if(lastIterated == -1) throw new IllegalStateException();
+            else {
+                MyArrayList.this.remove(lastIterated);
+                lastIterated = -1;
+                cursor--;
+            }
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public T next() {
+            if (cursor < size()) {
+                T element = (T)array[cursor];
+                lastIterated = cursor;
+                cursor++;
+                return element;
+            }
+            else throw new NoSuchElementException();
+        }
 
         public InnerListIterator(int index){
             super();

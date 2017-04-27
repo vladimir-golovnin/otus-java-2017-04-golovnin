@@ -3,7 +3,7 @@ package ru.otus.java_2017_04.golovnin.hw04;
 public class DrippingBucket {
 
     public void fill() {
-        final int ITERATIONS_NUM = 250;
+        final int ITERATIONS_NUM = 350;
         final int ELEMENTS_NUM = 1_600_000;
         String[] array = new String[ELEMENTS_NUM];
         int i;

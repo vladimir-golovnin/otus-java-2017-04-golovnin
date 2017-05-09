@@ -7,19 +7,19 @@ public class Assert {
     }
 
     public static void assertTrue(boolean condition){
-        if(!condition) throw new AssertionError();
+        if(!condition) fail();
     }
 
     public static void assertFalse(boolean condition){
-        if(condition) throw new AssertionError();
+        if(condition) fail();
     }
 
     public static void assertNotNull(Object o) {
-        if(o == null) throw new AssertionError();
+        if(o == null) fail();
     }
 
     public static void assertEquals(int expected, int actuals){
-        if(expected != actuals) throw new AssertionError();
+        if(expected != actuals) fail();
     }
 
 

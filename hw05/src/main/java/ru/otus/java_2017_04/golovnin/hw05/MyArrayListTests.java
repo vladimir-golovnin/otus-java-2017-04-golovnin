@@ -8,21 +8,6 @@ import java.lang.reflect.Field;
 
 public class MyArrayListTests {
 
-    private static int startedTestCounter = 0;
-    private static int finishedTestCounter = 0;
-
-    @Before
-    public void startedTestsCount()
-    {
-        startedTestCounter++;
-    }
-
-    @After
-    public void finishedTestsCount()
-    {
-        finishedTestCounter++;
-    }
-
     @Test
     public void testDefaultConstructor()
     {
@@ -61,7 +46,6 @@ public class MyArrayListTests {
             MyArrayList<Object> rat = new MyArrayList<>(capacity);
             checkArrayCapacity(rat, capacity);
         }
-
     }
 
     @Test
@@ -79,7 +63,7 @@ public class MyArrayListTests {
         rat.remove(0);
         Assert.assertFalse(rat.isEmpty());
         rat.remove(0);
-        Assert.assertFalse(rat.isEmpty());
+        Assert.assertTrue(rat.isEmpty());
 
     }
 

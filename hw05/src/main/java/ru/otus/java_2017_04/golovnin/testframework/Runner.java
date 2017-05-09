@@ -1,23 +1,18 @@
 package ru.otus.java_2017_04.golovnin.testframework;
 
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
 
 public class Runner {
     public static void run(Class<?>... testClasses)
     {
         int invokedTestsCounter = 0;
-        int passedTestsCounter = 0;
+        int failedTestsCounter = 0;
+        int errorTestCounter = 0;
 
         for (Class<?> testClass : testClasses
              ) {
@@ -50,7 +45,7 @@ public class Runner {
                 if(!testMethods.isEmpty()) {
                     try {
                         Object testClassInstance = testClass.newInstance();
-                        System.out.println("Running tests from " + testClass.getName());
+                        System.out.println("\nRunning tests from " + testClass.getName());
                         Method test;
                         while ((test = testMethods.poll()) != null) {
                             if(invokeMethods(beforeTestsMethods, testClassInstance)) {
@@ -62,33 +57,23 @@ public class Runner {
                                 } catch (InvocationTargetException e) {
                                     Throwable cause = e.getCause();
                                     if (cause.getClass() == AssertionError.class) {
-                                        System.out.println();
-                                        System.out.flush();
-                                        try {
-                                            TimeUnit.MILLISECONDS.sleep(10);
-                                        } catch (InterruptedException e1) {
-                                            e1.printStackTrace();
-                                        }
-
-                                        cause.printStackTrace();
-                                        System.err.flush();
+                                        System.out.println(" : FAIL");
+                                        cause.printStackTrace(System.out);
                                         resultIsOk = false;
-                                    }else if(cause.getClass() == getExpectedException(test)) {
-
-                                    }
-                                    else {
-                                        e.printStackTrace();
+                                        failedTestsCounter++;
+                                    }else if(cause.getClass() != getExpectedException(test)) {
+                                        System.out.println(" : FAIL");
+                                        e.printStackTrace(System.out);
                                         resultIsOk = false;
+                                        errorTestCounter++;
                                     }
-
                                 }
                                 if (resultIsOk) {
                                     System.out.println(" : OK");
-                                    passedTestsCounter++;
                                 }
                                 invokeMethods(afterTestsMethods, testClassInstance);
                             }
-
+                            else errorTestCounter++;
                         }
                     } catch (InstantiationException | IllegalAccessException e) {
                         e.printStackTrace();
@@ -96,14 +81,18 @@ public class Runner {
                 }
             }
         }
-        printReport(invokedTestsCounter, passedTestsCounter);
+        printReport(invokedTestsCounter, failedTestsCounter, errorTestCounter);
     }
 
-    private static void printReport(int total, int passed){
+    private static void printReport(int total, int failed, int errors){
         System.out.println();
-        System.out.println(total + " tests have been run");
-        System.out.println(passed + " tests have been passed");
-        System.out.println((total - passed) + " tests have been failed");
+        System.out.print("Tests run: ");
+        System.out.print(total);
+        System.out.print(", Failures: ");
+        System.out.print(failed);
+        System.out.print(", Errors: ");
+        System.out.print(errors);
+        System.out.println();
     }
 
     private static boolean invokeMethods(List<Method> methods, Object instance){
@@ -139,5 +128,12 @@ public class Runner {
             expectedException = testAnnotation.expected();
         }
         return expectedException;
+    }
+
+    public static void run(String pack){
+        Reflections reflections = new Reflections(pack, new SubTypesScanner(false));
+        Set<Class<? extends Object>> classSet = reflections.getSubTypesOf(Object.class);
+        Class<?>[] sample = new Class[1];
+        run(classSet.toArray(sample));
     }
 }

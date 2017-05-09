@@ -8,6 +8,6 @@ public class App
     public static void main( String[] args )
     {
         Runner.run(MyArrayListTests.class);
-
+        Runner.run("ru.otus.java_2017_04.golovnin.hw05");
     }
 }

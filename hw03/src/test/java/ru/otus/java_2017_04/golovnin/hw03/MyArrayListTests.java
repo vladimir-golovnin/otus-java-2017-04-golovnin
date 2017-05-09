@@ -35,6 +35,7 @@ public class MyArrayListTests {
         MyArrayList<Object> rat = new MyArrayList<>();
         final int DEFAULT_CAPACITY = 16;
         checkArrayCapacity(rat, DEFAULT_CAPACITY);
+
     }
 
     @Test(expected = IllegalArgumentException.class)

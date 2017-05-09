@@ -23,13 +23,6 @@ public class MyArrayListTests {
         finishedTestCounter++;
     }
 
-    @AfterClass
-    public static void showCredits()
-    {
-        System.out.println(startedTestCounter + " tests started");
-        System.out.println(finishedTestCounter + " tests finished");
-    }
-
     @Test
     public void testDefaultConstructor()
     {
@@ -86,7 +79,7 @@ public class MyArrayListTests {
         rat.remove(0);
         Assert.assertFalse(rat.isEmpty());
         rat.remove(0);
-        Assert.assertTrue(rat.isEmpty());
+        Assert.assertFalse(rat.isEmpty());
 
     }
 

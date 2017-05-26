@@ -1,17 +1,16 @@
 package ru.otus.java_2017_04.golovnin.hw07;
 
-import com.sun.istack.internal.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ATM {
+public class ATM implements ATMInterface{
     private List<BanknoteCell> cells;
     private BanknoteCell cellsChain;
     private Currency currency;
     private static final Currency DEFAULT_CURRENCY = Currency.getInstance("RUB");
 
-    public ATM(@NotNull Currency currency, @NotNull List<BanknoteCell> cells){
+    public ATM(Currency currency, List<BanknoteCell> cells){
         if(currency == null) this.currency = DEFAULT_CURRENCY;
         else this.currency = currency;
         this.cells = cells.stream().filter(c -> c.getCurrency().equals(currency)).collect(Collectors.toList());
@@ -42,7 +41,7 @@ public class ATM {
         return returnedBanknotes;
     }
 
-    List<Banknote> withdraw(int sum) {
+    public List<Banknote> withdraw(int sum) {
         List<Banknote> cash;
         if(sum > 0){
             cash = cellsChain.withdraw(sum);
@@ -52,7 +51,7 @@ public class ATM {
         return cash;
     }
 
-    public int getBallance(){
+    public int getBalance(){
         int result = 0;
         if(cells != null){
             for (BanknoteCell cell : cells

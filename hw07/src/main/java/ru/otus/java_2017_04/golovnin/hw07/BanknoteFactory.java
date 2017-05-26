@@ -15,6 +15,9 @@ public class BanknoteFactory {
         }
     }
 
+    public Currency getCurrency(){
+        return this.currency;
+    }
 
     public Iterator<Integer> nominalsIterator(){
         return nominalSet.iterator();
@@ -25,4 +28,13 @@ public class BanknoteFactory {
         else throw new NoSuchElementException();
     }
 
+    public List<Banknote> getBanknotes(int nominal, int amount){
+        List<Banknote> banknotes = new LinkedList<>();
+        if (nominalSet.contains(nominal)) {
+            for (int counter = 0; counter < amount; counter++){
+                banknotes.add(new Banknote(this.currency, nominal));
+            }
+        }
+        return banknotes;
+    }
 }

@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.util.*;
 
-public class ATMtest {
+public class ATMTest {
     private static final Currency RUBLE = Currency.getInstance("RUB");
 
     private ATM createATMforTest(){
@@ -22,7 +22,7 @@ public class ATMtest {
     @Test
     public void checkEmptyATM(){
         ATM atm = createATMforTest();
-        Assert.assertEquals(0, atm.getBallance());
+        Assert.assertEquals(0, atm.getBalance());
         List<Banknote> cash = atm.withdraw(900);
         Assert.assertTrue(cash.isEmpty());
     }
@@ -33,7 +33,7 @@ public class ATMtest {
         List<Banknote> cash = new LinkedList<>();
         cash.add(new Banknote(RUBLE,50));
         cash = atm.putCash(cash);
-        Assert.assertEquals(50, atm.getBallance());
+        Assert.assertEquals(50, atm.getBalance());
         Assert.assertTrue(cash.isEmpty());
         cash = atm.withdraw(50);
         Assert.assertTrue(cash.size() == 1);
@@ -47,7 +47,7 @@ public class ATMtest {
         List<Banknote> cash = new LinkedList<>();
         cash.add(new Banknote(RUBLE,100));
         cash = atm.putCash(cash);
-        Assert.assertEquals(100, atm.getBallance());
+        Assert.assertEquals(100, atm.getBalance());
         Assert.assertTrue(cash.isEmpty());
         cash = atm.withdraw(100);
         Assert.assertTrue(cash.size() == 1);
@@ -62,7 +62,7 @@ public class ATMtest {
         cash.add(new Banknote(RUBLE,50));
         cash.add(new Banknote(RUBLE, 50));
         cash = atm.putCash(cash);
-        Assert.assertEquals(100, atm.getBallance());
+        Assert.assertEquals(100, atm.getBalance());
         Assert.assertTrue(cash.isEmpty());
         cash = atm.withdraw(100);
         Assert.assertTrue(cash.size() == 2);
@@ -80,7 +80,7 @@ public class ATMtest {
         cash.add(new Banknote(RUBLE, 50));
         cash.add(new Banknote(RUBLE, 100));
         cash = atm.putCash(cash);
-        Assert.assertEquals(200, atm.getBallance());
+        Assert.assertEquals(200, atm.getBalance());
         Assert.assertTrue(cash.isEmpty());
         cash = atm.withdraw(100);
         Assert.assertTrue(cash.size() == 1);
@@ -94,7 +94,7 @@ public class ATMtest {
         List<Banknote> cash = new LinkedList<>();
         cash.add(new Banknote(RUBLE,111));
         cash = atm.putCash(cash);
-        Assert.assertEquals(0, atm.getBallance());
+        Assert.assertEquals(0, atm.getBalance());
         Assert.assertTrue(cash.size() == 1);
         Assert.assertEquals(111, cash.get(0).getNominal());
         Assert.assertSame(RUBLE, cash.get(0).getCurrency());
@@ -107,33 +107,33 @@ public class ATMtest {
         ATM atm = createATMforTest();
         List<Banknote> cash = Collections.nCopies(50, new Banknote(RUBLE, 50));
         atm.putCash(cash);
-        Assert.assertEquals(2500, atm.getBallance());
+        Assert.assertEquals(2500, atm.getBalance());
 
         cash = Collections.nCopies(101, new Banknote(RUBLE, 100));
         atm.putCash(cash);
-        Assert.assertEquals(12600, atm.getBallance());
+        Assert.assertEquals(12600, atm.getBalance());
 
         cash = Collections.nCopies(97, new Banknote(RUBLE, 500));
         atm.putCash(cash);
-        Assert.assertEquals(61100, atm.getBallance());
+        Assert.assertEquals(61100, atm.getBalance());
 
         cash = Collections.nCopies(74, new Banknote(RUBLE, 1000));
         atm.putCash(cash);
-        Assert.assertEquals(135100, atm.getBallance());
+        Assert.assertEquals(135100, atm.getBalance());
 
         cash = Collections.nCopies(30, new Banknote(RUBLE, 5000));
         atm.putCash(cash);
-        Assert.assertEquals(285100, atm.getBallance());
+        Assert.assertEquals(285100, atm.getBalance());
 
         ATMMemento memento = atm.getMemento();
 
-        cash = atm.withdraw(atm.getBallance());
+        cash = atm.withdraw(atm.getBalance());
         Assert.assertEquals(285100, countCash(cash));
-        Assert.assertEquals(0, atm.getBallance());
+        Assert.assertEquals(0, atm.getBalance());
 
         atm.restore(memento);
-        Assert.assertEquals(285100, atm.getBallance());
-        cash = atm.withdraw(atm.getBallance());
+        Assert.assertEquals(285100, atm.getBalance());
+        cash = atm.withdraw(atm.getBalance());
         Assert.assertEquals(285100, countCash(cash));
     }
 

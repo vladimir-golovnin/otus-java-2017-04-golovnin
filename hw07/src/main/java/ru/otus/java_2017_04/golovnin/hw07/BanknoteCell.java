@@ -8,11 +8,9 @@ import java.util.Stack;
 public class BanknoteCell {
     private int nominal;
     private Currency currency;
-    private int count = 0;
     private int capacity;
     private Stack<Banknote> roll = new Stack<>();
     private BanknoteCell nextCell = null;
-
 
     public BanknoteCell(Currency currency, int nominal, int capacity){
         this.currency = currency;
@@ -29,7 +27,7 @@ public class BanknoteCell {
     }
 
     public int count(){
-        return count;
+        return roll.size();
     }
 
     public BanknoteCell link(BanknoteCell cell){
@@ -51,9 +49,8 @@ public class BanknoteCell {
         Banknote result = null;
         if(banknote.getCurrency().equals(currency)
                 && banknote.getNominal() == nominal
-                && count < capacity) {
+                && count() < capacity) {
             roll.push(banknote);
-            count++;
             result = null;
         }
         else {
@@ -70,7 +67,7 @@ public class BanknoteCell {
         List<Banknote> result = new LinkedList<>();
         if(requestedSum > 0) {
             int expectedCount = requestedSum / nominal;
-            int ensuredCount = Math.min(expectedCount, count);
+            int ensuredCount = Math.min(expectedCount, count());
             int ensuredSum = ensuredCount * nominal;
             if (ensuredSum == requestedSum) {
                 result.addAll(withdrawAmount(ensuredCount));
@@ -86,12 +83,23 @@ public class BanknoteCell {
 
     public List<Banknote> withdrawAmount(int amount){
         List<Banknote> result = new LinkedList<>();
-        if(amount <= count){
+        if(amount <= count()){
             for(int counter = 0; counter < amount; counter++){
                 result.add(roll.pop());
-                count--;
             }
         }
         return result;
+    }
+
+    public BanknoteCellMemento getMemento(){
+        return new BanknoteCellMemento(count());
+    }
+
+    public void restore(BanknoteCellMemento memento){
+        if(memento != null){
+            for(int counter = memento.getCount() - count(); counter > 0; counter-- ){
+                roll.push(new Banknote(this.currency, this.nominal));
+            }
+        }
     }
 }

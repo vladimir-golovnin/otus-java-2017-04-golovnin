@@ -2,10 +2,7 @@ package ru.otus.java_2017_04.golovnin.hw07;
 
 import com.sun.istack.internal.NotNull;
 
-import javax.swing.plaf.basic.BasicMenuBarUI;
-import java.util.Currency;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ATM {
@@ -31,15 +28,17 @@ public class ATM {
     public List<Banknote> putCash(List<Banknote> cash){
         List<Banknote> returnedBanknotes = new LinkedList<>();
         if(cellsChain != null && cash != null)
+        {
             if(!cash.isEmpty()){
-                while (!cash.isEmpty()){
-                    Banknote banknote = cash.remove(cash.size() - 1);
+                for (Banknote banknote:cash
+                     ) {
                     Banknote returnedBanknote = cellsChain.put(banknote);
                     if(returnedBanknote != null){
                         returnedBanknotes.add(returnedBanknote);
                     }
                 }
             }
+        }
         return returnedBanknotes;
     }
 
@@ -48,7 +47,7 @@ public class ATM {
         if(sum > 0){
             cash = cellsChain.withdraw(sum);
         }
-        else if(sum == 0) cash = new LinkedList<>();
+        else if(sum == 0) cash = Collections.EMPTY_LIST;
         else throw new IllegalArgumentException();
         return cash;
     }
@@ -62,5 +61,18 @@ public class ATM {
             }
         }
         return result;
+    }
+
+    public ATMMemento getMemento(){
+        Map<BanknoteCell, BanknoteCellMemento> cellMementos = new HashMap<BanknoteCell, BanknoteCellMemento>(cells.size()*2);
+        cells.forEach(c -> cellMementos.put(c, c.getMemento()));
+        return new ATMMemento(cellMementos);
+    }
+
+    public void restore(ATMMemento memento){
+        Map<BanknoteCell, BanknoteCellMemento> mementoMap = memento.getMementos();
+        cells.forEach(c -> {
+            c.restore(mementoMap.get(c));
+        });
     }
 }

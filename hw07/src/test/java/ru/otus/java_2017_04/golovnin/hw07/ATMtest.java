@@ -3,10 +3,7 @@ package ru.otus.java_2017_04.golovnin.hw07;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Currency;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class ATMtest {
     private static final Currency RUBLE = Currency.getInstance("RUB");
@@ -105,4 +102,42 @@ public class ATMtest {
         Assert.assertTrue(cash.isEmpty());
     }
 
+    @Test
+    public void testRestore(){
+        ATM atm = createATMforTest();
+        List<Banknote> cash = Collections.nCopies(50, new Banknote(RUBLE, 50));
+        atm.putCash(cash);
+        Assert.assertEquals(2500, atm.getBallance());
+
+        cash = Collections.nCopies(101, new Banknote(RUBLE, 100));
+        atm.putCash(cash);
+        Assert.assertEquals(12600, atm.getBallance());
+
+        cash = Collections.nCopies(97, new Banknote(RUBLE, 500));
+        atm.putCash(cash);
+        Assert.assertEquals(61100, atm.getBallance());
+
+        cash = Collections.nCopies(74, new Banknote(RUBLE, 1000));
+        atm.putCash(cash);
+        Assert.assertEquals(135100, atm.getBallance());
+
+        cash = Collections.nCopies(30, new Banknote(RUBLE, 5000));
+        atm.putCash(cash);
+        Assert.assertEquals(285100, atm.getBallance());
+
+        ATMMemento memento = atm.getMemento();
+
+        cash = atm.withdraw(atm.getBallance());
+        Assert.assertEquals(285100, countCash(cash));
+        Assert.assertEquals(0, atm.getBallance());
+
+        atm.restore(memento);
+        Assert.assertEquals(285100, atm.getBallance());
+        cash = atm.withdraw(atm.getBallance());
+        Assert.assertEquals(285100, countCash(cash));
+    }
+
+    private int countCash(List<Banknote> cash){
+        return cash.stream().mapToInt(Banknote::getNominal).sum();
+    }
 }

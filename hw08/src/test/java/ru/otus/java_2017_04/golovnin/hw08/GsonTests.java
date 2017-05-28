@@ -13,6 +13,7 @@ public class GsonTests {
         Gson gson = gsonBuilder.setPrettyPrinting().create();
         Handbag bag = new Handbag();
         System.out.println(gson.toJson(bag));
+
     }
 
 }

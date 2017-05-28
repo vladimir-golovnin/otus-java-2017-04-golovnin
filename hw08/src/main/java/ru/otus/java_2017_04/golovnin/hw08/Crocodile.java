@@ -19,5 +19,6 @@ public class Crocodile {
 
     public void feed(Object... foods){
         lunch = foods;
+        bellyfulCoef = 0.01 * lunch.length;
     }
 }

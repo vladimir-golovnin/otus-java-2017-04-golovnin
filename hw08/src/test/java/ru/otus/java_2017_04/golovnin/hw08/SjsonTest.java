@@ -16,6 +16,7 @@ public class SjsonTest {
 
         ar.add("first");
         ar.add(new Integer(100));
+        ar.add(new Handbag());
 
         obj.put("one", "two");
         obj.put("three", "four");

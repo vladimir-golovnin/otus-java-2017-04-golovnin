@@ -10,7 +10,10 @@ public class Jameson {
         converterChain.chain(new NumberConverter());
         converterChain.chain(new CharecterConverter());
         converterChain.chain(new StringConverter());
+        converterChain.chain(new DateConverter());
         converterChain.chain(new ArrayConverter(converterChain));
+        converterChain.chain(new MapConverter(converterChain));
+        converterChain.chain(new IterableConverter(converterChain));
         converterChain.chain(new ObjectConverter(converterChain));
     }
 

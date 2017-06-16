@@ -8,13 +8,17 @@ public class DataSet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", unique = true, nullable = false, length = 20)
-    protected long id;
+    private long id;
 
-    public DataSet(long id){
+    DataSet(){
+        id = -1;
+    }
+
+    DataSet(long id){
         this.id = id;
     }
 
-    public long getId(){
+    long getId(){
         return id;
     }
 }

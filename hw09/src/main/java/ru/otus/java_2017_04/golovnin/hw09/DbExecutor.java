@@ -1,7 +1,5 @@
 package ru.otus.java_2017_04.golovnin.hw09;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import javax.persistence.*;
 import javax.sql.DataSource;
 import java.lang.annotation.Annotation;
@@ -40,7 +38,7 @@ public class DbExecutor {
         }
     }
 
-    private <T extends DataSet> Map<String,String> extractValues(T dataSet, List<Field> fieldsList) {
+    private Map<String,String> extractValues(Object dataSet, List<Field> fieldsList) {
         Map<String, String> dataMap = new HashMap<>();
         if(dataSet != null && fieldsList != null) {
             for (Field field : fieldsList
@@ -96,33 +94,55 @@ public class DbExecutor {
         return statementBuilder.toString();
     }
 
-    <T extends DataSet> T load(long id, Class<T> tClass) {
+    private String buildSelectStatement(String tableName, String idColumnName, long id){
+        StringBuilder statementBuilder = new StringBuilder();
+        statementBuilder.append("select * from ");
+        statementBuilder.append(tableName);
+        statementBuilder.append(" where ");
+        statementBuilder.append(idColumnName);
+        statementBuilder.append("=");
+        statementBuilder.append(id);
+        return statementBuilder.toString();
+    }
 
+    <T extends DataSet> T load(long id, Class<T> tClass) {
+        T result = null;
         if(tClass != null) {
             String tableName = getTableName(tClass);
             if (tableName != null) {
 
-                ResultSet result = null;
+                ResultSet queryResult;
                 try (Connection dbConnection = dataSource.getConnection()) {
                     Statement statement = dbConnection.createStatement();
-                    StringBuilder statementBuilder = new StringBuilder();
-                    statementBuilder.append("select * from ");
-                    statementBuilder.append(tableName);
-                    statementBuilder.append(" where ");
-                    statementBuilder.append(ID_COLUMN_NAME);
-                    statementBuilder.append("=");
-                    statementBuilder.append(id);
-                    result = statement.executeQuery(statementBuilder.toString());
-                    if (result != null && result.next()) {
-
+                    String queryString = buildSelectStatement(tableName, ID_COLUMN_NAME, id);
+                    queryResult = statement.executeQuery(queryString);
+                    if (queryResult != null && queryResult.next()) {
+                        try {
+                            result = tClass.newInstance();
+                        } catch (InstantiationException e) {
+                            e.printStackTrace();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                        List<Field> storedFields = getStoredFields(tClass);
+                        for (Field field:storedFields
+                             ) {
+                            field.setAccessible(true);
+                            String columnName = getFieldColumnName(field);
+                            try {
+                                field.set(result, queryResult.getObject(columnName, field.getType()));
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                            field.setAccessible(false);
+                        }
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-
             }
         }
-        return null;
+        return result;
     }
 
     private List<Field> getStoredFields(Class<? extends DataSet> tClass){
@@ -187,18 +207,6 @@ public class DbExecutor {
         return name;
     }
 
-    private static List<Field> getFieldsWithAnnotation(Class clazz, Class<? extends Annotation> annotation){
-        List<Field> annotatedFields = new LinkedList<>();
-        if(clazz != null && annotation != null){
-            for (Field field:clazz.getDeclaredFields()){
-                if(field.getAnnotation(annotation) != null){
-                    annotatedFields.add(field);
-                }
-            }
-        }
-        return annotatedFields;
-    }
-
     private static String getFieldColumnName(Field field){
         String name = null;
         Annotation columnAnnotation = field.getAnnotation(Column.class);
@@ -215,10 +223,6 @@ public class DbExecutor {
             }
         }
         return name;
-    }
-
-    private <T extends DataSet> void buildDataset(T dataset){
-
     }
 
     private <T extends DataSet> String getTableName(Class<T> tClass){

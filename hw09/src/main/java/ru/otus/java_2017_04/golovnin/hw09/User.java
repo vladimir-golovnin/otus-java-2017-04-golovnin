@@ -11,19 +11,25 @@ public class User extends DataSet{
     private String name;
 
     @Column(name = "age", nullable = false, length = 3)
-    private byte age;
+    private int age;
 
-    public User(long id, String name, byte age){
+    User(){
+        super();
+        name = "";
+        age = 0;
+    }
+
+    User(long id, String name, int age){
         super(id);
         this.name = name;
         this.age = age;
     }
 
-    public String getName(){
+    String getName(){
         return name;
     }
 
-    public byte getAge() {
+    int getAge() {
         return age;
     }
 }

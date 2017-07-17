@@ -1,27 +1,18 @@
 package ru.otus.java_2017_04.golovnin.hw12;
 
-
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.servlet.ServletContextHandler;
+import ru.otus.java_2017_04.golovnin.hw12.TestRig.DbServiceTestRig;
+import ru.otus.java_2017_04.golovnin.hw12.TestRigMonitor.TestRigMonitor;
 
 public class App
 {
-    private final static int SERVER_PORT = 8080;
-    private final static String resourceDir = "public_resources";
 
-    public static void main( String[] args ) throws Exception {
-        ResourceHandler resourceHandler = new ResourceHandler();
-        resourceHandler.setResourceBase(resourceDir);
+    private static final int MONITOR_PORT = 8080;
 
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(AdminServlet.class, "/admin");
-
-        Server server = new Server(8080);
-        server.setHandler(new HandlerList(resourceHandler, context));
-        server.start();
-        server.join();
+    public static void main( String[] args ) {
+        DbServiceTestRig testRig = new DbServiceTestRig();
+        TestRigMonitor monitor = new TestRigMonitor(MONITOR_PORT, testRig);
+        monitor.start();
+        testRig.start();
     }
 
 

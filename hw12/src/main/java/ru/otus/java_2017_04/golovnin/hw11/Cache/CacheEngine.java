@@ -5,5 +5,7 @@ public interface CacheEngine<K, V> {
     V get(K key);
     int getHitCount();
     int getMissCount();
+    float getFillFactor();
+
     void dispose();
 }

@@ -6,10 +6,10 @@
 </head>
 <body>
 <div>
-    <p>
-        hits: ${hits}<br>
-        misses: ${misses}
-    </p>
+    <h1>Database service parameters</h1>
+    <#list parameters as name, value>
+        <p>${name}: ${value}</p>
+    </#list>
 </div>
 </body>
 </html>

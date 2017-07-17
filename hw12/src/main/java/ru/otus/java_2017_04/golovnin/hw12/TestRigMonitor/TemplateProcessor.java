@@ -1,4 +1,4 @@
-package ru.otus.java_2017_04.golovnin.hw12;
+package ru.otus.java_2017_04.golovnin.hw12.TestRigMonitor;
 
 
 import freemarker.template.Configuration;

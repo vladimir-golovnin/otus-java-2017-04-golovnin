@@ -105,6 +105,11 @@ public class Cache<K, V> implements CacheEngine<K, V> {
     }
 
     @Override
+    public float getFillFactor() {
+        return ((float)elementsMap.size())/maxElements;
+    }
+
+    @Override
     public void dispose() {
         purgeTimer.cancel();
     }

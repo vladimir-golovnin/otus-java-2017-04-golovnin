@@ -1,9 +1,14 @@
 package ru.otus.java_2017_04.golovnin.hw14;
 
 
-public class QuickIntSorter implements IntegerArraySorter{
+public class CustomQuickSorter implements IntegerArraySorter{
     public void sort(int[] array){
         quickSort(array, 0, array.length - 1);
+    }
+
+    @Override
+    public String getName() {
+        return this.getClass().getSimpleName();
     }
 
     int partition(int arr[], int left, int right)

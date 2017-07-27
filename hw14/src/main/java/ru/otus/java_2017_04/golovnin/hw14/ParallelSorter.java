@@ -1,58 +1,75 @@
 package ru.otus.java_2017_04.golovnin.hw14;
 
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ParallelSorter implements IntegerArraySorter{
     private final ExecutorService execService;
-    private final AtomicInteger sortersCounter = new AtomicInteger(0);
+    private final Queue<SpawnSorter> sortersPool;
+    private final int threadsNumber;
 
     public ParallelSorter(int threadsNumber){
+        this.threadsNumber = threadsNumber;
         execService = Executors.newFixedThreadPool(threadsNumber);
+        sortersPool = new ConcurrentLinkedQueue<>();
+        while (sortersPool.size() < threadsNumber){
+            sortersPool.offer(new SpawnSorter());
+        }
     }
 
     @Override
     public void sort(int[] array) {
-        createSpawnSorter(array, 0, array.length - 1);
+        sortersPool.poll().executeTask(array, 0, array.length - 1);
         while (!taskIsDone());
+        execService.shutdown();
     }
 
-    private void createSpawnSorter(int[] array, int start, int end){
-        execService.submit(new SpawnSorter(array, start, end));
-        sortersCounter.incrementAndGet();
+    @Override
+    public String getName() {
+        return this.getClass().getSimpleName() + " with " + threadsNumber + " threads";
     }
 
-    private void removeSpawnSorter(){
-        sortersCounter.decrementAndGet();
-    }
 
     private boolean taskIsDone(){
-        return sortersCounter.get() == 0;
+        return threadsNumber == sortersPool.size();
     }
 
     private class SpawnSorter implements Runnable{
 
-        private final int[] array;
-        private final int startIndex;
-        private final int endIndex;
+        private int[] array;
+        private int startIndex;
+        private int endIndex;
 
-        public SpawnSorter(int[] array, int start, int end){
+
+        public void executeTask(int[] array, int start, int end){
             this.array = array;
-            this.startIndex  = start;
+            this.startIndex = start;
             this.endIndex = end;
+            execService.submit(this);
         }
 
         @Override
         public void run() {
-            int index = partition(array, startIndex, endIndex);
-            if (startIndex < index - 1) {
-                createSpawnSorter(array, startIndex, index - 1);
+            quickSort(startIndex, endIndex);
+            sortersPool.offer(this);
+        }
+
+        private void quickSort(int left, int right) {
+            int index = partition(array, left, right);
+            if (left < index - 1) {
+                selectExecutor(left, index - 1);
             }
-            if (index < endIndex) {
-                createSpawnSorter(array, index, endIndex);
+            if (index < right) {
+                selectExecutor(index, right);
             }
-            removeSpawnSorter();
+        }
+
+        private void selectExecutor(int left, int right){
+            SpawnSorter subsorter = sortersPool.poll();
+            if(subsorter != null) subsorter.executeTask(array, left, right);
+            else quickSort(left, right);
         }
 
         private int partition(int arr[], int left, int right)

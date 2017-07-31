@@ -1,8 +1,7 @@
-package ru.otus.java_2017_04.golovnin.hw02;
+package ru.otus.java_2017_04.golovnin.hw02.ObjectWeighting;
 
-import java.io.*;
 
-public class ObjectScale {
+public class ObjectScales {
     private static final int initialScaleArraySize = 10_000_000;
     private static final int iterationsNumber = 6;
 
@@ -10,7 +9,6 @@ public class ObjectScale {
         int scaleArraySize = initialScaleArraySize;
         boolean arraySizeIsNotSet = true;
 
-        int weigh = 0;
         int correctedWeigh = 0;
 
         do {
@@ -38,8 +36,8 @@ public class ObjectScale {
                     estimatesSum += weighEstimates[i];
                 }
 
-                weigh = estimatesSum / (iterationsNumber - 1);
-                correctedWeigh = weigh % 8 == 0 ? weigh : ( (weigh / 8 + 1)*8);
+                int weight = estimatesSum / (iterationsNumber - 1);
+                correctedWeigh = weight % Byte.SIZE == 0 ? weight : ( (weight / Byte.SIZE + 1)*Byte.SIZE);
                 arraySizeIsNotSet = false;
             }
             catch (OutOfMemoryError e){
@@ -48,43 +46,5 @@ public class ObjectScale {
         }while (arraySizeIsNotSet);
 
         return correctedWeigh;
-    }
-
-    public int weigh2(Object object)
-    {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream ous = new ObjectOutputStream(baos);
-            ous.writeObject(object);
-
-
-
-            return baos.size();
-        } catch (IOException e) {
-            return 0;
-        }
-    }
-
-    private Object cloneObject(Object object)
-    {
-
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream ous = new ObjectOutputStream(baos);
-            ous.writeObject(object);
-            ous.close();
-            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            Object clonedObject = ois.readObject();
-            baos.close();
-            bais.close();
-            ois.close();
-            return clonedObject;
-        } catch (IOException e) {
-            return null;
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
-
     }
 }

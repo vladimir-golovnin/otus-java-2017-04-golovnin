@@ -1,27 +1,43 @@
 package ru.otus.java_2017_04.golovnin.hw02.ObjectWeighting;
 
-import ru.otus.java_2017_04.golovnin.hw02.ObjectWeighting.ObjectFactory;
-import ru.otus.java_2017_04.golovnin.hw02.ObjectWeighting.ObjectScales;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class ObjectScaleQueue {
-    private Queue<ObjectFactory> tasks = new LinkedList<>();
+    private Queue<ScaleTask> tasks = new LinkedList<>();
     private ObjectScales scale = new ObjectScales();
 
-    public void addTask(ObjectFactory task)
+    private class ScaleTask{
+        private final String name;
+        private final ObjectFactory factory;
+
+        public ScaleTask(String name, ObjectFactory factory){
+            this.name = name;
+            this.factory = factory;
+        }
+
+        public ObjectFactory getFactory() {
+            return factory;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    public void addTask(ObjectFactory factory, String objectName)
     {
-        tasks.offer(task);
+        tasks.offer(new ScaleTask(objectName, factory));
     }
 
     public void operate()
     {
-        ObjectFactory task;
+        ScaleTask task;
         while( (task = tasks.poll()) != null)
         {
-            System.out.print("Weight of " + task.getObjectName());
-            System.out.println(" is "  + scale.weigh(task) + " bytes");
+            System.out.print("Weight of " + task.getName());
+            System.out.println(" is "  + scale.weigh(task.getFactory()) + " bytes");
         }
     }
 }

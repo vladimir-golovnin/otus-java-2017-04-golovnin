@@ -12,8 +12,8 @@ public abstract class AbstractSortersTestRig {
     }
 
     public final void start(){
-        for (IntegerArraySorter sorter : sorters
-                ) {
+        IntegerArraySorter sorter;
+        while ((sorter = sorters.poll()) != null){
             test(sorter);
         }
     }

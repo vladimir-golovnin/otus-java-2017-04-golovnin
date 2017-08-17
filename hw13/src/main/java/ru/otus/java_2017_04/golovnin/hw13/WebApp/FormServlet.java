@@ -18,7 +18,6 @@ public class FormServlet extends HttpServlet{
     private static final String MESSAGE_DATA_NAME = "message";
     private static final String LOGIN_MESSAGE = "Please login";
     private static final String TRY_AGAIN_MESSAGE = "Try again";
-    private static final String RETRY_PARAMETER_NAME = "retry";
     private static final String TEMPLATE_PROCESSOR_BEAN_NAME = "TemplateProcessor";
     private static final String APP_CONTEXT_ATTRIBUTE_NAME = "appContext";
     private static final String AUTH_SERVICE_ATTRIBUTE_NAME = "authService";
@@ -38,8 +37,8 @@ public class FormServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String message;
-        String retryParameter = req.getParameter(RETRY_PARAMETER_NAME);
-        if(retryParameter != null && retryParameter.equals("true")){
+
+        if(authService.getLoginTriesCount(req.getSession()) > 0){
             message = TRY_AGAIN_MESSAGE;
         }
         else message = LOGIN_MESSAGE;

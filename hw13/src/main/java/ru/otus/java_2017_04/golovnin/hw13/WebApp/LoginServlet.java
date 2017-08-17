@@ -12,7 +12,7 @@ public class LoginServlet extends HttpServlet {
     public static final String LOGIN_PARAMETER_NAME = "login";
     public static final String PASSWORD_PARAMETER_NAME = "pass";
     private static final String PATH_STORAGE_ATTRIBUTE_NAME = "redirectedPath";
-    private static final String ERROR_LOGIN_PATH_ATTRIBUTE_NAME = "errorFormPath";
+    private static final String ERROR_LOGIN_PATH_ATTRIBUTE_NAME = "loginFormPath";
     private static final String AUTH_SERVICE_ATTRIBUTE_NAME = "authService";
 
     private static final int MAX_INACTIVE_TIME_SEC = 20;

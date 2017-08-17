@@ -1,24 +1,22 @@
-package ru.otus.java_2017_04.golovnin.hw12.TestRig;
+package ru.otus.java_2017_04.golovnin.hw13.TestRig;
 
-import ru.otus.java_2017_04.golovnin.hw11.DbService.MySqlDbService;
+import ru.otus.java_2017_04.golovnin.hw11.DbService.DbService;
 import ru.otus.java_2017_04.golovnin.hw11.DbService.UserDataSet;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
-public class DbServiceTestRig implements ITestRig{
+public class DbServiceTestRig{
     private long startTime;
     private int iteration;
     private static final int ITERATIONS_NUM = 1_000_000;
-    private static final MySqlDbService dbService = new MySqlDbService();
-    private static final List<UserDataSet> usersList = new ArrayList<>();
+    private final DbService dbService;
+    private final List<UserDataSet> usersList = new ArrayList<>();
 
 
-    public DbServiceTestRig(){
+    public DbServiceTestRig(DbService dbService){
         usersList.add(new UserDataSet(1, "Frank", 19));
         usersList.add(new UserDataSet(2, "John", 42));
         usersList.add(new UserDataSet(3, "Robin", 34));
@@ -31,13 +29,13 @@ public class DbServiceTestRig implements ITestRig{
         usersList.add(new UserDataSet(10, "Mick", 49));
         usersList.add(new UserDataSet(11, "Ted", 26));
 
+        this.dbService = dbService;
         for (UserDataSet user:usersList
                 ) {
             dbService.saveUser(user);
         }
     }
 
-    @Override
     public void start()
     {
         Random random = new Random(System.currentTimeMillis());
@@ -66,19 +64,6 @@ public class DbServiceTestRig implements ITestRig{
         dbService.shutdown();
     }
 
-    @Override
-    public Map<String, Object> getParameters() {
-        Map<String, Object> parameters = new TreeMap<>();
-        parameters.put("Iteration count", iteration);
-        parameters.put("Access count", dbService.getAccessCount());
-        parameters.put("Cache hits", dbService.getCacheHits());
-        parameters.put("Cache misses", dbService.getCacheMiss());
-        parameters.put("Cache fill factor", dbService.getCacheFillFactor());
-        parameters.put("Cache elements max count", MySqlDbService.CACHE_MAX_ELEMENTS);
-        parameters.put("Cache live time, ms", MySqlDbService.CACHE_LIVE_TIME);
-        parameters.put("Cache idle time, ms", MySqlDbService.CACHE_IDLE_TIME);
-        return parameters;
-    }
 
     private void startMeasure(){
         startTime = System.nanoTime();

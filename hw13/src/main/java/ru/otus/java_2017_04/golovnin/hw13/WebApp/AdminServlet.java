@@ -1,13 +1,14 @@
 package ru.otus.java_2017_04.golovnin.hw13.WebApp;
 
-import javax.servlet.ServletConfig;
+import org.springframework.context.ApplicationContext;
+import ru.otus.java_2017_04.golovnin.hw11.DbService.DbService;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -17,14 +18,19 @@ public class AdminServlet extends HttpServlet{
     private static final String AUTH_ATTRIBUTE_NAME = "authorized";
     private static final String PATH_STORAGE_ATTRIBUTE_NAME = "redirectedPath";
     private static final String LOGIN_FORM_PATH_ATTRIBUTE_NAME = "loginFormPath";
+    private static final String APP_CONTEXT_ATTRIBUTE_NAME = "appContext";
+    private static final String DBSERVICE_BEAN_NAME = "DbService";
 
     private String loginPath;
+    private DbService dbService;
 
     @Override
     public void init() throws ServletException {
         super.init();
         ServletContext servletContext = this.getServletContext();
         loginPath = (String) servletContext.getAttribute(LOGIN_FORM_PATH_ATTRIBUTE_NAME);
+        ApplicationContext appContext = (ApplicationContext) servletContext.getAttribute(APP_CONTEXT_ATTRIBUTE_NAME);
+        dbService = (DbService) appContext.getBean(DBSERVICE_BEAN_NAME);
     }
 
     @Override
@@ -49,7 +55,8 @@ public class AdminServlet extends HttpServlet{
     }
 
     private Map<String,Object> generatePageData() {
-        Map<String, String> parameters = new TreeMap<>();
+        Map<String, Object> parameters = new TreeMap<>();
+        parameters.put("Access count", dbService.getAccessCount());
         parameters.put("Fail", "data");
         parameters.put("Fix", "me");
         Map<String, Object> pageData = new HashMap<>();

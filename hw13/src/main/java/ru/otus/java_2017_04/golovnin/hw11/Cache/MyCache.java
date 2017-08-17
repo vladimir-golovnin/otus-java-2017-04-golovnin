@@ -7,7 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Cache<K, V> implements CacheEngine<K, V> {
+public class MyCache<K, V> implements CacheEngine<K, V> {
     private final int maxElements;
     private final long lifeTimeMillis;
     private final long idleTimeMillis;
@@ -18,7 +18,7 @@ public class Cache<K, V> implements CacheEngine<K, V> {
     private static final long PURGE_PERIOD = 10;
     private Timer purgeTimer;
 
-    public Cache(int maxElements, long lifeTime, long idleTime){
+    public MyCache(int maxElements, long lifeTime, long idleTime){
         this.maxElements = maxElements > 0 ? maxElements : MAX_ELEMENTS_DEFAULT;
         this.lifeTimeMillis = lifeTime;
         this.idleTimeMillis = idleTime;

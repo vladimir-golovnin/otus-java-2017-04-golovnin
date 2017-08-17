@@ -1,6 +1,9 @@
 package ru.otus.java_2017_04.golovnin.hw13.WebApp;
 
 
+import org.springframework.context.ApplicationContext;
+
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +19,18 @@ public class FormServlet extends HttpServlet{
     private static final String LOGIN_MESSAGE = "Please login";
     private static final String TRY_AGAIN_MESSAGE = "Try again";
     private static final String RETRY_PARAMETER_NAME = "retry";
+    private static final String TEMPLATE_PROCESSOR_BEAN_NAME = "TemplateProcessor";
+    private static final String APP_CONTEXT_ATTRIBUTE_NAME = "appContext";
+
+    private TemplateProcessor templateProcessor;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        ServletContext servletContext = this.getServletContext();
+        ApplicationContext appContext = (ApplicationContext) servletContext.getAttribute(APP_CONTEXT_ATTRIBUTE_NAME);
+        templateProcessor = (TemplateProcessor) appContext.getBean(TEMPLATE_PROCESSOR_BEAN_NAME);
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -28,7 +43,7 @@ public class FormServlet extends HttpServlet{
 
         Map<String, Object> pageData = new HashMap<>();
         pageData.put(MESSAGE_DATA_NAME, message);
-        String page = TemplateProcessor.instance().getPage(PAGE_FILE, pageData);
+        String page = templateProcessor.getPage(PAGE_FILE, pageData);
         resp.getWriter().println(page);
         resp.setStatus(HttpServletResponse.SC_OK);
     }

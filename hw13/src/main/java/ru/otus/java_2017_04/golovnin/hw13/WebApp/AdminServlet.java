@@ -22,10 +22,12 @@ public class AdminServlet extends HttpServlet{
     private static final String APP_CONTEXT_ATTRIBUTE_NAME = "appContext";
     private static final String DBSERVICE_BEAN_NAME = "DbService";
     private static final String CACHE_BEAN_NAME = "DbServiceCache";
+    private static final String TEMPLATE_PROCESSOR_BEAN_NAME = "TemplateProcessor";
 
     private String loginPath;
     private DbService dbService;
     private CacheEngine cache;
+    private TemplateProcessor templateProcessor;
 
     @Override
     public void init() throws ServletException {
@@ -35,13 +37,14 @@ public class AdminServlet extends HttpServlet{
         ApplicationContext appContext = (ApplicationContext) servletContext.getAttribute(APP_CONTEXT_ATTRIBUTE_NAME);
         dbService = (DbService) appContext.getBean(DBSERVICE_BEAN_NAME);
         cache = (CacheEngine) appContext.getBean(CACHE_BEAN_NAME);
+        templateProcessor = (TemplateProcessor) appContext.getBean(TEMPLATE_PROCESSOR_BEAN_NAME);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         if(isAuthorized(req)){
-            String page = TemplateProcessor.instance().getPage(pageFile, generatePageData());
+            String page = templateProcessor.getPage(pageFile, generatePageData());
             resp.getWriter().println(page);
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("text/html; charset=UTF-8");

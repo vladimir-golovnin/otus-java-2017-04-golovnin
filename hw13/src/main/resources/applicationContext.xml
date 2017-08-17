@@ -5,16 +5,20 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="DbServiceCache" class="ru.otus.java_2017_04.golovnin.hw11.Cache.MyCache">
-        <constructor-arg value="9"></constructor-arg>
-        <constructor-arg value="60000"></constructor-arg>
-        <constructor-arg value="45000"></constructor-arg>
+        <constructor-arg value="9"/>
+        <constructor-arg value="60000"/>
+        <constructor-arg value="45000"/>
     </bean>
 
     <bean id="DbService" class="ru.otus.java_2017_04.golovnin.hw11.DbService.MySqlDbService">
-        <constructor-arg ref="DbServiceCache"></constructor-arg>
+        <constructor-arg ref="DbServiceCache"/>
     </bean>
 
     <bean id="TestRig" class="ru.otus.java_2017_04.golovnin.hw13.TestRig.DbServiceTestRig" init-method="start" destroy-method="stop">
-        <constructor-arg ref="DbService"></constructor-arg>
+        <constructor-arg ref="DbService"/>
+    </bean>
+
+    <bean id="TemplateProcessor" class="ru.otus.java_2017_04.golovnin.hw13.WebApp.FreemarkerTemplateProcessor">
+        <constructor-arg value="/templates/"/>
     </bean>
 </beans>

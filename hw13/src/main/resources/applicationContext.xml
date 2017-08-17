@@ -4,9 +4,17 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="DbService" class="ru.otus.java_2017_04.golovnin.hw11.DbService.MySqlDbService">
+    <bean id="DbServiceCache" class="ru.otus.java_2017_04.golovnin.hw11.Cache.MyCache">
+        <constructor-arg value="9"></constructor-arg>
+        <constructor-arg value="60000"></constructor-arg>
+        <constructor-arg value="45000"></constructor-arg>
     </bean>
-    <!--<bean id="TestRig" class="ru.otus.java_2017_04.golovnin.hw13.TestRig.DbServiceTestRig" >-->
-        <!--<constructor-arg ref="DbService"></constructor-arg>-->
-    <!--</bean>-->
+
+    <bean id="DbService" class="ru.otus.java_2017_04.golovnin.hw11.DbService.MySqlDbService">
+        <constructor-arg ref="DbServiceCache"></constructor-arg>
+    </bean>
+
+    <bean id="TestRig" class="ru.otus.java_2017_04.golovnin.hw13.TestRig.DbServiceTestRig" init-method="start" destroy-method="stop">
+        <constructor-arg ref="DbService"></constructor-arg>
+    </bean>
 </beans>

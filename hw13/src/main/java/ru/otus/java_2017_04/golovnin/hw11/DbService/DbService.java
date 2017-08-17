@@ -5,12 +5,5 @@ public interface DbService {
     void saveUser(UserDataSet user);
     UserDataSet loadUser(long id);
     void shutdown();
-
-    int getCacheHits();
-
-    int getCacheMiss();
-
-    float getCacheFillFactor();
-
     int getAccessCount();
 }

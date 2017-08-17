@@ -8,15 +8,16 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-public class DbServiceTestRig{
+public class DbServiceTestRig implements Runnable{
     private long startTime;
     private int iteration;
     private static final int ITERATIONS_NUM = 1_000_000;
     private final DbService dbService;
     private final List<UserDataSet> usersList = new ArrayList<>();
-
+    private boolean stopFlag;
 
     public DbServiceTestRig(DbService dbService){
+        stopFlag = false;
         usersList.add(new UserDataSet(1, "Frank", 19));
         usersList.add(new UserDataSet(2, "John", 42));
         usersList.add(new UserDataSet(3, "Robin", 34));
@@ -36,7 +37,12 @@ public class DbServiceTestRig{
         }
     }
 
-    public void start()
+    public void start(){
+        Thread testThread = new Thread(this);
+        testThread.start();
+    }
+
+    public void run()
     {
         Random random = new Random(System.currentTimeMillis());
 
@@ -44,6 +50,7 @@ public class DbServiceTestRig{
         final int TIMEOUT_DISPERSION = 1000;
 
         for(iteration = 0; iteration < ITERATIONS_NUM; iteration++){
+            if(stopFlag) break;
             long timeout = MIN_TIMEOUT + random.nextInt(TIMEOUT_DISPERSION);
             System.out.println("Timeout: " + timeout + " miliseconds");
             try {
@@ -64,6 +71,9 @@ public class DbServiceTestRig{
         dbService.shutdown();
     }
 
+    public void stop(){
+        stopFlag = true;
+    }
 
     private void startMeasure(){
         startTime = System.nanoTime();

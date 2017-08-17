@@ -1,6 +1,6 @@
 package ru.otus.java_2017_04.golovnin.hw11.DbService;
 
-import ru.otus.java_2017_04.golovnin.hw11.Cache.MyCache;
+import ru.otus.java_2017_04.golovnin.hw11.Cache.CacheEngine;
 
 import javax.sql.DataSource;
 
@@ -9,11 +9,11 @@ public class MySqlDbService implements DbService {
     private UserDataSetDAO userDAO = new UserDataSetDAO(dataSource);
     private int accessCounter = 0;
 
-    public static final int CACHE_MAX_ELEMENTS = 9;
-    public static final long CACHE_LIVE_TIME = 60000;
-    public static final long CACHE_IDLE_TIME = 45000;
+    private CacheEngine<Long, UserDataSet> cache;
 
-    private MyCache<Long, UserDataSet> cache = new MyCache<>(CACHE_MAX_ELEMENTS, CACHE_LIVE_TIME, CACHE_IDLE_TIME);
+    public MySqlDbService(CacheEngine cache){
+        this.cache = cache;
+    }
 
     @Override
     public void saveUser(UserDataSet user) {
@@ -39,24 +39,7 @@ public class MySqlDbService implements DbService {
     }
 
     @Override
-    public int getCacheHits(){
-        return cache.getHitCount();
-    }
-
-    @Override
-    public int getCacheMiss(){
-        return cache.getMissCount();
-    }
-
-    @Override
-    public float getCacheFillFactor(){
-        return cache.getFillFactor();
-    }
-
-    @Override
     public int getAccessCount(){
         return accessCounter;
     }
-
-
 }

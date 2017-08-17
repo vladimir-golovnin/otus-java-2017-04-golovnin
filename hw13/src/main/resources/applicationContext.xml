@@ -21,4 +21,8 @@
     <bean id="TemplateProcessor" class="ru.otus.java_2017_04.golovnin.hw13.WebApp.FreemarkerTemplateProcessor">
         <constructor-arg value="/templates/"/>
     </bean>
+
+    <bean id="AuthenticationService" class="ru.otus.java_2017_04.golovnin.hw13.WebApp.StupidAuthenticationService">
+
+    </bean>
 </beans>

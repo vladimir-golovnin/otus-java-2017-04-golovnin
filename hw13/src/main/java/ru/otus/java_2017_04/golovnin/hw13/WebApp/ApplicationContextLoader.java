@@ -14,6 +14,8 @@ public class ApplicationContextLoader implements ServletContextListener{
     private static final String ERROR_LOGIN_PATH = "/login?retry=true";
     private static final String APP_CONTEXT_FILE = "applicationContext.xml";
     private static final String APP_CONTEXT_ATTRIBUTE_NAME = "appContext";
+    private static final String AUTH_SERVICE_BEAN_NAME = "AuthenticationService";
+    private static final String AUTH_SERVICE_ATTRIBUTE_NAME = "authService";
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
@@ -22,6 +24,7 @@ public class ApplicationContextLoader implements ServletContextListener{
         servletContext.setAttribute("errorFormPath", ERROR_LOGIN_PATH);
         ApplicationContext appContext = new ClassPathXmlApplicationContext(APP_CONTEXT_FILE);
         servletContext.setAttribute(APP_CONTEXT_ATTRIBUTE_NAME, appContext);
+        servletContext.setAttribute(AUTH_SERVICE_ATTRIBUTE_NAME, appContext.getBean(AUTH_SERVICE_BEAN_NAME));
     }
 
     @Override

@@ -23,11 +23,13 @@ public class AdminServlet extends HttpServlet{
     private static final String DBSERVICE_BEAN_NAME = "DbService";
     private static final String CACHE_BEAN_NAME = "DbServiceCache";
     private static final String TEMPLATE_PROCESSOR_BEAN_NAME = "TemplateProcessor";
+    private static final String AUTH_SERVICE_ATTRIBUTE_NAME = "authService";
 
     private String loginPath;
     private DbService dbService;
     private CacheEngine cache;
     private TemplateProcessor templateProcessor;
+    private AuthenticationService authService;
 
     @Override
     public void init() throws ServletException {
@@ -38,12 +40,13 @@ public class AdminServlet extends HttpServlet{
         dbService = (DbService) appContext.getBean(DBSERVICE_BEAN_NAME);
         cache = (CacheEngine) appContext.getBean(CACHE_BEAN_NAME);
         templateProcessor = (TemplateProcessor) appContext.getBean(TEMPLATE_PROCESSOR_BEAN_NAME);
+        authService = (AuthenticationService) servletContext.getAttribute(AUTH_SERVICE_ATTRIBUTE_NAME);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        if(isAuthorized(req)){
+        if(authService.isAuthorized(req.getSession())){
             String page = templateProcessor.getPage(pageFile, generatePageData());
             resp.getWriter().println(page);
             resp.setStatus(HttpServletResponse.SC_OK);
@@ -54,11 +57,6 @@ public class AdminServlet extends HttpServlet{
             resp.sendRedirect(loginPath);
         }
 
-    }
-
-    private boolean isAuthorized(HttpServletRequest req){
-        Boolean authorized = (Boolean)req.getSession().getAttribute(AUTH_ATTRIBUTE_NAME);
-        return authorized != null && authorized;
     }
 
     private Map<String,Object> generatePageData() {

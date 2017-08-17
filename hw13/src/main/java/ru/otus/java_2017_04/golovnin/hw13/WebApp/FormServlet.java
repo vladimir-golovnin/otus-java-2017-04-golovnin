@@ -21,8 +21,10 @@ public class FormServlet extends HttpServlet{
     private static final String RETRY_PARAMETER_NAME = "retry";
     private static final String TEMPLATE_PROCESSOR_BEAN_NAME = "TemplateProcessor";
     private static final String APP_CONTEXT_ATTRIBUTE_NAME = "appContext";
+    private static final String AUTH_SERVICE_ATTRIBUTE_NAME = "authService";
 
     private TemplateProcessor templateProcessor;
+    private AuthenticationService authService;
 
     @Override
     public void init() throws ServletException {
@@ -30,6 +32,7 @@ public class FormServlet extends HttpServlet{
         ServletContext servletContext = this.getServletContext();
         ApplicationContext appContext = (ApplicationContext) servletContext.getAttribute(APP_CONTEXT_ATTRIBUTE_NAME);
         templateProcessor = (TemplateProcessor) appContext.getBean(TEMPLATE_PROCESSOR_BEAN_NAME);
+        authService = (AuthenticationService) servletContext.getAttribute(AUTH_SERVICE_ATTRIBUTE_NAME);
     }
 
     @Override

@@ -23,6 +23,11 @@
     </bean>
 
     <bean id="AuthenticationService" class="ru.otus.java_2017_04.golovnin.hw13.WebApp.StupidAuthenticationService">
-
+        <constructor-arg>
+            <props>
+                <prop key="Vladimir">123</prop>
+                <prop key="Vitaliy">tully</prop>
+            </props>
+        </constructor-arg>
     </bean>
 </beans>

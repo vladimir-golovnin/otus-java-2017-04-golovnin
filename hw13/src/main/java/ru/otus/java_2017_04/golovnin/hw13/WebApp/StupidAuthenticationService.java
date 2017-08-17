@@ -7,11 +7,10 @@ import java.util.Properties;
 public class StupidAuthenticationService implements AuthenticationService {
     private static final String AUTH_ATTRIBUTE_NAME = "authorized";
     private static final String LOGIN_ATTRIBUTE_NAME = "login";
-    private final Properties keys = new Properties();
+    private final Properties keys;
 
-    public StupidAuthenticationService(){
-        keys.setProperty("Vladimir", "123");
-        keys.setProperty("Vitaliy", "tully");
+    public StupidAuthenticationService(Properties keys){
+        this.keys = keys;
     }
 
     @Override

@@ -37,7 +37,7 @@ public class StupidAuthenticationService implements AuthenticationService {
 
     private void incrementLoginTriesCount(HttpSession session){
         Integer triesCount = (Integer)session.getAttribute(LOGIN_TRIES_COUNT_ATTRIBUTE_NAME);
-        if(triesCount == null) triesCount = 0;
+        if(triesCount == null) triesCount = 1;
         else triesCount++;
         session.setAttribute(LOGIN_TRIES_COUNT_ATTRIBUTE_NAME, triesCount);
     }

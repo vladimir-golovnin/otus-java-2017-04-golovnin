@@ -4,3 +4,5 @@
 */.idea
 *.iml
 */target
+hw13/deploy.bat
+hw15/deploy.bat

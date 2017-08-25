@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin page</title>
+</head>
+<body>
+<div>
+    <p>Hello, ${login}</p>
+    <p>Database service and cache parameters:</p>
+    <#list parameters as name, value>
+        <p>${name}: ${value}</p>
+    </#list>
+</div>
+</body>
+</html>

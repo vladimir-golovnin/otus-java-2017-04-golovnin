@@ -40,12 +40,14 @@ public class AdminServlet extends HttpServlet{
 
         try (InputStream is = servletContext.getResourceAsStream(pageFile)){
             if(is != null){
-                BufferedReader pageReader = new BufferedReader(new InputStreamReader(is));
+                BufferedReader pageReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                pageReader.skip(1);
                 StringBuilder pageBuilder = new StringBuilder();
                 String nextLine;
                 while ((nextLine = pageReader.readLine()) != null){
                     pageBuilder.append(nextLine);
                 }
+                pageReader.close();
                 page = pageBuilder.toString();
             }
         } catch (IOException e) {

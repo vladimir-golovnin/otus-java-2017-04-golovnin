@@ -10,8 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -36,8 +38,20 @@ public class AdminServlet extends HttpServlet{
         authService = (AuthenticationService) servletContext.getAttribute(AUTH_SERVICE_ATTRIBUTE_NAME);
         page = "empty";
 
-        InputStream is = servletContext.getResourceAsStream(pageFile);
-        if(is != null) page = "stream";
+        try (InputStream is = servletContext.getResourceAsStream(pageFile)){
+            if(is != null){
+                BufferedReader pageReader = new BufferedReader(new InputStreamReader(is));
+                StringBuilder pageBuilder = new StringBuilder();
+                String nextLine;
+                while ((nextLine = pageReader.readLine()) != null){
+                    pageBuilder.append(nextLine);
+                }
+                page = pageBuilder.toString();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

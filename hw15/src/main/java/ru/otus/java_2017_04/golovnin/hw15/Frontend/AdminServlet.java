@@ -11,12 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class AdminServlet extends HttpServlet{
-    private static final String pageFile = "admin.html";
+    private static final String pageFile = "/admin.html";
     private static final String PATH_STORAGE_ATTRIBUTE_NAME = "redirectedPath";
     private static final String LOGIN_FORM_PATH_ATTRIBUTE_NAME = "loginFormPath";
     private static final String APP_CONTEXT_ATTRIBUTE_NAME = "appContext";
@@ -35,6 +36,8 @@ public class AdminServlet extends HttpServlet{
         authService = (AuthenticationService) servletContext.getAttribute(AUTH_SERVICE_ATTRIBUTE_NAME);
         page = "empty";
 
+        InputStream is = servletContext.getResourceAsStream(pageFile);
+        if(is != null) page = "stream";
     }
 
     @Override

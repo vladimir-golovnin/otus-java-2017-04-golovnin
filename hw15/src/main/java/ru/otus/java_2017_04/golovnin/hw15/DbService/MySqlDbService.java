@@ -4,6 +4,7 @@ import ru.otus.java_2017_04.golovnin.hw15.Cache.CacheEngine;
 import ru.otus.java_2017_04.golovnin.hw15.MessageSystem.MessageSystem;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 public class MySqlDbService implements DbService {
     private DataSource dataSource = (new HikariDataSourceFactory()).getDataSource();
@@ -36,6 +37,11 @@ public class MySqlDbService implements DbService {
             }
         }
         return loadedUser;
+    }
+
+    @Override
+    public List<UserDataSet> getAllUsers() {
+        return userDAO.getAll();
     }
 
     @Override

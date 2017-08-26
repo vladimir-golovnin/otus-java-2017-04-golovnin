@@ -8,6 +8,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import ru.otus.java_2017_04.golovnin.hw15.Application.MessageToDbAddUser;
 import ru.otus.java_2017_04.golovnin.hw15.Application.MessageToDbRemoveUser;
+import ru.otus.java_2017_04.golovnin.hw15.Application.MessageToDbUpdateUser;
 import ru.otus.java_2017_04.golovnin.hw15.MessageSystem.Address;
 import ru.otus.java_2017_04.golovnin.hw15.MessageSystem.MessageSystem;
 
@@ -31,16 +32,14 @@ public class MySocket {
     @OnWebSocketConnect
     public void onConnect(Session session){
         this.session = session;
-        UserData user1 = new UserData(100, "John", 30);
-        UserData user2 = new UserData(200, "Jessica", 25);
-        UserData user3 = new UserData(300, "Jason", 15);
-
-        sendUsersData(Arrays.asList(user1, user2, user3));
 
         msAddress = ms.registerAddressee(this);
         if(msAddress == null) {
             session.close();
         }
+        else ms.sendMessage(
+                new MessageToDbUpdateUser(msAddress),
+                "Data base");
     }
 
     @OnWebSocketClose
@@ -62,7 +61,7 @@ public class MySocket {
         }
     }
 
-    private void sendUsersData(List<UserData> users){
+    public void sendUsersData(List<UserData> users){
         if(session.isOpen()) {
             try {
                 session.getRemote().sendString(jsonConverter.toJson(users));
@@ -72,14 +71,5 @@ public class MySocket {
         }
     }
 
-    private void sendMessage(String msg){
-        if(session.isOpen()) {
-            try {
-                session.getRemote().sendString(msg);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
 

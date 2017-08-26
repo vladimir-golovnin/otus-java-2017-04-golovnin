@@ -70,38 +70,52 @@ public class UserDataSetDAO {
         UserDataSet result = null;
         String queryString = buildSelectStatement(TABLE_NAME, ID_COLUMN_NAME, id);
         DbQueryExecutor executor = new DbQueryExecutor(dataSource);
-        result = executor.executeQuery(queryString, new QueryResultHandler<UserDataSet>() {
-            @Override
-            public UserDataSet handle(ResultSet queryResult) {
-                UserDataSet handleResult = null;
-                try {
-                    if (queryResult != null && queryResult.next()) {
-                        try {
-                            handleResult = UserDataSet.class.newInstance();
-                        } catch (InstantiationException e) {
-                            e.printStackTrace();
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
+        result = executor.executeQuery(queryString, queryResult -> extractUserData(queryResult));
+        return result;
+    }
 
-                        for (Field field:STORED_FIELDS
-                                ) {
-                            field.setAccessible(true);
-                            String columnName = getFieldColumnName(field);
-                            try {
-                                field.set(handleResult, queryResult.getObject(columnName, field.getType()));
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            }
-                            field.setAccessible(false);
-                        }
-                    }
-                } catch (SQLException e) {
+    private UserDataSet extractUserData(ResultSet queryResult) {
+        UserDataSet handleResult = null;
+        try {
+            if (queryResult != null && queryResult.next()) {
+                try {
+                    handleResult = UserDataSet.class.newInstance();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
-                return handleResult;
+
+                for (Field field:STORED_FIELDS
+                        ) {
+                    field.setAccessible(true);
+                    String columnName = getFieldColumnName(field);
+                    try {
+                        field.set(handleResult, queryResult.getObject(columnName, field.getType()));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    field.setAccessible(false);
+                }
             }
-        });
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return handleResult;
+    }
+
+    List<UserDataSet> getAll(){
+        DbQueryExecutor executor = new DbQueryExecutor(dataSource);
+        List<UserDataSet> result = executor.executeQuery(
+                buildSelectAllStatement(TABLE_NAME),
+                queryResult -> {
+                    List<UserDataSet> resultList = new LinkedList<>();
+                    UserDataSet entry;
+                    while ((entry = extractUserData(queryResult)) != null){
+                        resultList.add(entry);
+                    }
+                    return resultList;
+                });
         return result;
     }
 
@@ -176,6 +190,13 @@ public class UserDataSetDAO {
         statementBuilder.append(idColumnName);
         statementBuilder.append("=");
         statementBuilder.append(id);
+        return statementBuilder.toString();
+    }
+
+    private String buildSelectAllStatement(String tableName){
+        StringBuilder statementBuilder = new StringBuilder();
+        statementBuilder.append("select * from ");
+        statementBuilder.append(tableName);
         return statementBuilder.toString();
     }
 

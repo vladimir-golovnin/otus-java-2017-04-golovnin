@@ -95,6 +95,13 @@ public class MyCache<K, V> implements CacheEngine<K, V> {
     }
 
     @Override
+    public void remove(K key) {
+        synchronized (elementsMap){
+            elementsMap.remove(key);
+        }
+    }
+
+    @Override
     public int getHitCount() {
         return hitCounter;
     }

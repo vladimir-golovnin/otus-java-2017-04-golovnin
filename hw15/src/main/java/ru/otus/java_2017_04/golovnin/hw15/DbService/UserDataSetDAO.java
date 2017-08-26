@@ -105,6 +105,13 @@ public class UserDataSetDAO {
         return result;
     }
 
+    void delete(long id){
+        DbQueryExecutor executor = new DbQueryExecutor(dataSource);
+        executor.executeQuery(
+                buildDeleteStatement(TABLE_NAME, ID_COLUMN_NAME, id),
+                null);
+    }
+
     private Map<String,String> extractValues(Object dataSet) {
         Map<String, String> dataMap = new HashMap<>();
         if(dataSet != null && STORED_FIELDS != null) {
@@ -172,7 +179,16 @@ public class UserDataSetDAO {
         return statementBuilder.toString();
     }
 
-
+    private String buildDeleteStatement(String tableName, String idColumnName, long id){
+        StringBuilder statementBuilder = new StringBuilder();
+        statementBuilder.append("delete from ");
+        statementBuilder.append(tableName);
+        statementBuilder.append(" where ");
+        statementBuilder.append(idColumnName);
+        statementBuilder.append("=");
+        statementBuilder.append(id);
+        return statementBuilder.toString();
+    }
 
     private static List<Field> getStoredFields(Class<? extends DataSet> tClass){
         List<Field> fieldsList = new LinkedList<>();

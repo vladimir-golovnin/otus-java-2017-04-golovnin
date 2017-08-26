@@ -39,6 +39,12 @@ public class MySqlDbService implements DbService {
     }
 
     @Override
+    public void removeUser(long id) {
+        userDAO.delete(id);
+        cache.remove(id);
+    }
+
+    @Override
     public void shutdown() {
         cache.dispose();
     }

@@ -37,13 +37,28 @@ function addUser(){
         ws.send(JSON.stringify(userAction));
     }
 };
+
+function removeUser(){
+    var id = document.getElementById("identificator").value;
+    if(!isNaN(id)){
+        var userAction = {
+            action: 2,
+            user: { id: id, name: "", age: 0}
+        };
+        ws.send(JSON.stringify(userAction));
+    }
+};
     </script>
 </head>
 <body>
 <form>
-    name:<input type="text" id="name" autocomplete="off">
-    age:<input type="text" id="age" autocomplete="off">
+    <p>name:<input type="text" id="name" autocomplete="off"></p>
+    <p>age:<input type="text" id="age" autocomplete="off"></p>
     <input type="button" value="add" onclick=addUser()>
+</form>
+<form>
+    <p>id:<input type="text" id="identificator" autocomplete="off"></p>
+    <input type="button" value="remove" onclick=removeUser()>
 </form>
 <div id="data"></div>
 <div id="status"></div>

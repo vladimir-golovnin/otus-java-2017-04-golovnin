@@ -13,7 +13,7 @@ public class MessageSystem {
         this.addressProvider = addressProvider;
     }
 
-    public final Address registeraddressee(Object object) {
+    public final Address registerAddressee(Object object) {
         Address address = addressProvider.getAddress();
         if(address != null) {
             Addressee addressee = new Addressee(this, address, object);
@@ -42,7 +42,7 @@ public class MessageSystem {
     }
 
     public Address registerService(String serviceName, Object service){
-        Address address = registeraddressee(service);
+        Address address = registerAddressee(service);
         serviceAddresses.put(serviceName, address);
         return address;
     }

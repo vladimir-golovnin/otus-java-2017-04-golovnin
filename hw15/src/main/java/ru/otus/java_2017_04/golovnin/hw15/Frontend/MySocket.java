@@ -36,11 +36,10 @@ public class MySocket {
 
         sendUsersData(Arrays.asList(user1, user2, user3));
 
-        //msAddress = ms.registeraddressee(this);
-//        if(msAddress == null) {
-//            sendMessage(WebsocketMessage.TYPE_ERROR, null);
-//            session.close();
-//        }
+        msAddress = ms.registerAddressee(this);
+        if(msAddress == null) {
+            session.close();
+        }
     }
 
     @OnWebSocketClose

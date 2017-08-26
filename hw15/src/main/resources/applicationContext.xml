@@ -28,10 +28,10 @@
     </bean>
 
     <bean id="AddressProvider" class="ru.otus.java_2017_04.golovnin.hw15.MessageSystem.AddressProvider">
-        <constructor-arg value="4"></constructor-arg>
+        <constructor-arg value="4"/>
     </bean>
 
     <bean id="MessageSystem" class="ru.otus.java_2017_04.golovnin.hw15.MessageSystem.MessageSystem">
-        <constructor-arg ref="AddressProvider"></constructor-arg>
+        <constructor-arg ref="AddressProvider"/>
     </bean>
 </beans>

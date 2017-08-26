@@ -12,19 +12,16 @@ public class SocketHandler extends WebSocketServlet {
     private static final String APP_CONTEXT_ATTRIBUTE_NAME = "appContext";
     private static final String MESSAGE_SYSTEM_BEAN_ID = "MessageSystem";
 
-    private MessageSystem ms;
+    @Override
+    public void configure(WebSocketServletFactory webSocketServletFactory) {
+        ServletContext servletContext = this.getServletContext();
+        ApplicationContext appContext = (ApplicationContext) servletContext.getAttribute(APP_CONTEXT_ATTRIBUTE_NAME);
+        MessageSystem ms = (MessageSystem) appContext.getBean(MESSAGE_SYSTEM_BEAN_ID);
+        webSocketServletFactory.setCreator(new MySocketCreator(ms));
+    }
 
     @Override
     public void init() throws ServletException {
         super.init();
-        ServletContext servletContext = this.getServletContext();
-        ApplicationContext appContext = (ApplicationContext) servletContext.getAttribute(APP_CONTEXT_ATTRIBUTE_NAME);
-        ms = (MessageSystem) appContext.getBean(MESSAGE_SYSTEM_BEAN_ID);
     }
-
-    @Override
-    public void configure(WebSocketServletFactory webSocketServletFactory) {
-        webSocketServletFactory.setCreator(new MySocketCreator(ms));
-    }
-
 }

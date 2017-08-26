@@ -1,19 +1,15 @@
-﻿<html xmlns="http://www.w3.org/1999/xhtml" content="text/html;">
+﻿<!DOCTYPE html>
+<html>
 <head>
- <meta charset="utf-8">
- <title>Index</title>
- <script src="/websocket.js"></script>
+    <meta charset="utf-8">
+    <title>Тег SCRIPT</title>
+    <script>
+    function popup() {
+   document.getElementById('welcome').innerHTML = "Добро пожаловать!";
+  }
+    </script>
 </head>
-<body>
-<div id="pageContent">
- <p>Get user by id:</p>
- <form>
-  <p>id:</p><input type="text" id="id" autocomplete="off" onkeyup=getUser()>
-  <input type="button" value="get" onclick=getUser()>
- </form>
- <p id="message">
-
- </p>
-</div>
+<body onload="popup()">
+<div id="welcome"></div>
 </body>
 </html>

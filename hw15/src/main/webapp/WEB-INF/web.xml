@@ -3,7 +3,6 @@
 <web-app>
   <display-name>hw15</display-name>
   <description>Users Management</description>
-
     <listener>
         <listener-class>ru.otus.java_2017_04.golovnin.hw15.Frontend.ApplicationContextLoader</listener-class>
     </listener>
@@ -23,7 +22,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>AdminServlet</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 
     <servlet>

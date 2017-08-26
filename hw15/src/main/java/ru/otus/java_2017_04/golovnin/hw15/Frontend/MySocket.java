@@ -11,6 +11,8 @@ import ru.otus.java_2017_04.golovnin.hw15.MessageSystem.Address;
 import ru.otus.java_2017_04.golovnin.hw15.MessageSystem.MessageSystem;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @WebSocket
 public class MySocket {
@@ -28,11 +30,17 @@ public class MySocket {
     @OnWebSocketConnect
     public void onConnect(Session session){
         this.session = session;
-        msAddress = ms.registeraddressee(this);
-        if(msAddress == null) {
-            sendMessage(WebsocketMessage.TYPE_ERROR, null);
-            session.close();
-        }
+        UserData user1 = new UserData(100, "John", 30);
+        UserData user2 = new UserData(200, "Jessica", 25);
+        UserData user3 = new UserData(300, "Jason", 15);
+
+        sendUsersData(Arrays.asList(user1, user2, user3));
+
+        //msAddress = ms.registeraddressee(this);
+//        if(msAddress == null) {
+//            sendMessage(WebsocketMessage.TYPE_ERROR, null);
+//            session.close();
+//        }
     }
 
     @OnWebSocketClose
@@ -42,18 +50,32 @@ public class MySocket {
 
     @OnWebSocketMessage
     public void onMessage(String message){
-        UserAction action = jsonConverter.fromJson(message, UserAction.class);
-        ms.sendMessage(new MessageToDbGetUser(msAddress, action.getId()), "Data base");
+        UserActionMessage decodedMessage = jsonConverter.fromJson(message, UserActionMessage.class);
+        switch (decodedMessage.action){
+            case UserActionMessage.ACTION_ADD:
+                sendUsersData(Arrays.asList(decodedMessage.user));
+                break;
+            case UserActionMessage.ACTION_REMOVE:
+
+                break;
+        }
+        //ms.sendMessage(new MessageToDbGetUser(msAddress, action.getId()), "Data base");
     }
 
-    public void sendUserData(FrontendUserData data){
-        sendMessage(WebsocketMessage.TYPE_USER_DATA, data);
-    }
-
-    private void sendMessage(int type, Object content){
+    private void sendUsersData(List<UserData> users){
         if(session.isOpen()) {
             try {
-                session.getRemote().sendString(jsonConverter.toJson(new WebsocketMessage(type, content)));
+                session.getRemote().sendString(jsonConverter.toJson(users));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void sendMessage(String msg){
+        if(session.isOpen()) {
+            try {
+                session.getRemote().sendString(msg);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -7,6 +7,12 @@ import java.util.Queue;
 public class AddressProvider {
     private final Queue<Address> addressPool = new LinkedList<>();
 
+    public AddressProvider(int addresCount){
+        for (int i = 0; i < addresCount; i++) {
+            putAddress(new Address(i));
+        }
+    }
+
     public Address getAddress(){
         synchronized (addressPool) {
             return addressPool.poll();

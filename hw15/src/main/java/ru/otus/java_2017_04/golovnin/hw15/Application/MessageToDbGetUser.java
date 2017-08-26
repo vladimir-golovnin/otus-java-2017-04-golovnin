@@ -1,6 +1,8 @@
-package ru.otus.java_2017_04.golovnin.hw15.DbService;
+package ru.otus.java_2017_04.golovnin.hw15.Application;
 
 
+import ru.otus.java_2017_04.golovnin.hw15.DbService.AbstractMessageToDb;
+import ru.otus.java_2017_04.golovnin.hw15.DbService.DbService;
 import ru.otus.java_2017_04.golovnin.hw15.MessageSystem.Address;
 import ru.otus.java_2017_04.golovnin.hw15.MessageSystem.Addressee;
 

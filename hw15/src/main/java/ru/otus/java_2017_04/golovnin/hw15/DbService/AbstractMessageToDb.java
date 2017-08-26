@@ -18,7 +18,7 @@ public abstract class AbstractMessageToDb extends Message {
         if(obj instanceof DbService){
             return execute((DbService)obj);
         }
-        else return (ms) -> {};
+        else return null;
     }
 
     public abstract Consumer<Addressee> execute(DbService dbService);

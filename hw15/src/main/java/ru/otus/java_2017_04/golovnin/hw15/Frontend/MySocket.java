@@ -6,7 +6,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import ru.otus.java_2017_04.golovnin.hw15.DbService.MessageToDbGetUser;
+import ru.otus.java_2017_04.golovnin.hw15.Application.MessageToDbAddUser;
 import ru.otus.java_2017_04.golovnin.hw15.MessageSystem.Address;
 import ru.otus.java_2017_04.golovnin.hw15.MessageSystem.MessageSystem;
 
@@ -52,7 +52,8 @@ public class MySocket {
         UserActionMessage decodedMessage = jsonConverter.fromJson(message, UserActionMessage.class);
         switch (decodedMessage.action){
             case UserActionMessage.ACTION_ADD:
-                sendUsersData(Arrays.asList(decodedMessage.user));
+                UserData user = decodedMessage.user;
+                ms.sendMessage(new MessageToDbAddUser(msAddress, user), "Data base");
                 break;
             case UserActionMessage.ACTION_REMOVE:
 

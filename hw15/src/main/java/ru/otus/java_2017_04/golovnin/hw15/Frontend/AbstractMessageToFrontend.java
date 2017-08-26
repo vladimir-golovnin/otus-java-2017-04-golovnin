@@ -16,7 +16,7 @@ public abstract class AbstractMessageToFrontend extends Message {
         if(obj instanceof MySocket){
             return execute((MySocket)obj);
         }
-        return (ms) -> {};
+        return null;
     }
 
     public abstract Consumer<Addressee> execute(MySocket socket);

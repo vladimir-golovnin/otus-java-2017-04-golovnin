@@ -2,6 +2,7 @@ package ru.otus.java_2017_04.golovnin.hw15.MessageSystem;
 
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.function.Consumer;
 
 public class Addressee {
     private static final int MESSAGE_QUEUE_CAPACITY = 32;
@@ -72,6 +73,7 @@ public class Addressee {
     }
 
     private void processMessage(Message message){
-        message.execute(client).accept(this);
+        Consumer<Addressee> consumer = message.execute(client);
+        if(consumer != null) consumer.accept(this);
     }
 }

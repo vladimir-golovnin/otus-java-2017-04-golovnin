@@ -1,21 +1,17 @@
 package ru.otus.java_2017_04.golovnin.hw15.Frontend;
 
-import org.eclipse.jetty.websocket.server.WebSocketHandler;
+import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import ru.otus.java_2017_04.golovnin.hw15.MessageSystem.MessageSystem;
 
-public class SocketHandler extends WebSocketHandler {
+public class SocketHandler extends WebSocketServlet {
 
-    private final MessageSystem ms;
-
-    public SocketHandler(MessageSystem messageSystem){
-        this.ms = messageSystem;
-    }
+    private MessageSystem ms;
 
     @Override
     public void configure(WebSocketServletFactory webSocketServletFactory) {
-        webSocketServletFactory.setCreator(new MySocketCreator(ms));
+        //webSocketServletFactory.setCreator(new MySocketCreator(ms));
+        webSocketServletFactory.register(FakeSocket.class);
     }
-
 
 }

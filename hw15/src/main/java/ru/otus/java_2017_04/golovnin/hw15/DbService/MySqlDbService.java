@@ -1,7 +1,6 @@
 package ru.otus.java_2017_04.golovnin.hw15.DbService;
 
 import ru.otus.java_2017_04.golovnin.hw15.Cache.CacheEngine;
-import ru.otus.java_2017_04.golovnin.hw15.MessageSystem.MessageSystem;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -15,10 +14,6 @@ public class MySqlDbService implements DbService {
 
     public MySqlDbService(CacheEngine cache){
         this.cache = cache;
-    }
-
-    public void setMessageSystem(MessageSystem ms){
-        ms.registerService("Data base", this);
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
+import ru.otus.java_2017_04.golovnin.hw15.Frontend.ClientsNotificator;
 import ru.otus.java_2017_04.golovnin.hw15.Frontend.UserActionMessage;
 import ru.otus.java_2017_04.golovnin.hw15.Frontend.UserData;
 import ru.otus.java_2017_04.golovnin.hw15.MessageSystem.Address;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class MySocketCreator implements WebSocketCreator{
+public class MySocketCreator implements WebSocketCreator, ClientsNotificator{
 
     private final MessageSystem ms;
     private final Gson jsonConverter = new Gson();
@@ -29,7 +30,6 @@ public class MySocketCreator implements WebSocketCreator{
 
     public MySocketCreator(MessageSystem messageSystem) {
         ms = messageSystem;
-        ms.registerService("Clients notificator", this);
     }
 
     @Override
@@ -37,6 +37,7 @@ public class MySocketCreator implements WebSocketCreator{
         return new MySocket();
     }
 
+    @Override
     public void sendUsersData(List<UserData> users){
         sessionSet.forEach(session -> {
                     if (session.isOpen()) {

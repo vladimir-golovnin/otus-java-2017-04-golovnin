@@ -1,9 +1,5 @@
 package ru.otus.java_2017_04.golovnin.hw15.Frontend;
 
-import org.springframework.context.ApplicationContext;
-import ru.otus.java_2017_04.golovnin.hw15.Cache.CacheEngine;
-import ru.otus.java_2017_04.golovnin.hw15.DbService.DbService;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,9 +10,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class AdminServlet extends HttpServlet{
     private static final String pageFile = "/admin.html";

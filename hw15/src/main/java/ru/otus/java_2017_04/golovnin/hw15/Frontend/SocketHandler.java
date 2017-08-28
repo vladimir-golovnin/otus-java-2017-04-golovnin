@@ -4,7 +4,6 @@ import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import org.springframework.context.ApplicationContext;
-import ru.otus.java_2017_04.golovnin.hw15.MessageSystem.MessageSystem;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;

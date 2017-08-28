@@ -12,7 +12,6 @@
 
     <bean id="DbService" class="ru.otus.java_2017_04.golovnin.hw15.DbService.MySqlDbService">
         <constructor-arg ref="DbServiceCache"/>
-        <property name="messageSystem" ref="MessageSystem"></property>
     </bean>
 
     <bean id="TemplateProcessor" class="ru.otus.java_2017_04.golovnin.hw15.Frontend.FreemarkerTemplateProcessor">
@@ -38,5 +37,11 @@
 
     <bean id="SocketCreator" class="ru.otus.java_2017_04.golovnin.hw15.Application.MySocketCreator">
         <constructor-arg ref="MessageSystem"/>
+    </bean>
+
+    <bean id="ApplicationContext" class="ru.otus.java_2017_04.golovnin.hw15.Application.ApplicationContext">
+        <constructor-arg ref="MessageSystem"/>
+        <property name="dbService" ref="DbService"/>
+        <property name="clientsNotificationService" ref="SocketCreator"/>
     </bean>
 </beans>

@@ -25,9 +25,8 @@ public class StupidAuthenticationService implements AuthenticationService {
 
     @Override
     public boolean isAuthorized(HttpSession session) {
-//        Boolean authorized = (Boolean)session.getAttribute(AUTH_ATTRIBUTE_NAME);
-//        return authorized != null && authorized;
-        return true;
+        Boolean authorized = (Boolean)session.getAttribute(AUTH_ATTRIBUTE_NAME);
+        return authorized != null && authorized;
     }
 
     @Override

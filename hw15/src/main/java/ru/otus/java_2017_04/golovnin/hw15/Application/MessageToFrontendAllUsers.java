@@ -1,6 +1,5 @@
 package ru.otus.java_2017_04.golovnin.hw15.Application;
 
-import ru.otus.java_2017_04.golovnin.hw15.Frontend.MySocketCreator;
 import ru.otus.java_2017_04.golovnin.hw15.Frontend.UserData;
 import ru.otus.java_2017_04.golovnin.hw15.MessageSystem.Address;
 import ru.otus.java_2017_04.golovnin.hw15.MessageSystem.Addressee;

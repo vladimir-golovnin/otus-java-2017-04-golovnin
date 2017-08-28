@@ -35,4 +35,8 @@
     <bean id="MessageSystem" class="ru.otus.java_2017_04.golovnin.hw15.MessageSystem.MessageSystem">
         <constructor-arg ref="AddressProvider"/>
     </bean>
+
+    <bean id="SocketCreator" class="ru.otus.java_2017_04.golovnin.hw15.Application.MySocketCreator">
+        <constructor-arg ref="MessageSystem"/>
+    </bean>
 </beans>

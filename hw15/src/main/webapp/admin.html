@@ -12,11 +12,32 @@ ws.onopen = function(){
 
 ws.onmessage = function (evt){
     var message = JSON.parse(evt.data);
-    var usersData = "";
+    cleanUsersBoard();
     message.forEach(function(entry){
-            usersData += entry.name;
+            printUserData(entry);
         });
-    document.getElementById("data").innerHTML = usersData;
+};
+
+function cleanUsersBoard(){
+    var usersBoard = document.getElementById("usersBoard");
+    usersBoard.innerHTML = "<p>Users:</p>";
+};
+
+function printUserData(user){
+    var usersBoard = document.getElementById("usersBoard");
+
+    var userDiv = document.createElement("div");
+    userDiv.setAttribute("id", user.id);
+    userDiv.setAttribute("style", "");
+    usersBoard.appendChild(userDiv);
+
+    var userName = document.createElement("span");
+    userName.innerHTML = user.name + ", " + user.age + " ";
+    userDiv.appendChild(userName);
+
+    var removeUser = document.createElement("span");
+    removeUser.innerHTML = "<a href=\"#\" OnClick=removeUser(" + user.id + ")>x</a>";
+    userDiv.appendChild(removeUser);
 };
 
 ws.onclose = function(evt){
@@ -38,8 +59,7 @@ function addUser(){
     }
 };
 
-function removeUser(){
-    var id = document.getElementById("identificator").value;
+function removeUser(id){
     if(!isNaN(id)){
         var userAction = {
             action: 2,
@@ -54,13 +74,9 @@ function removeUser(){
 <form>
     <p>name:<input type="text" id="name" autocomplete="off"></p>
     <p>age:<input type="text" id="age" autocomplete="off"></p>
-    <input type="button" value="add" onclick=addUser()>
+    <p><input type="button" value="add" onclick=addUser()></p>
 </form>
-<form>
-    <p>id:<input type="text" id="identificator" autocomplete="off"></p>
-    <input type="button" value="remove" onclick=removeUser()>
-</form>
-<div id="data"></div>
+<div id="usersBoard" style="border: solid 1px black;"></div>
 <div id="status"></div>
 </body>
 </html>

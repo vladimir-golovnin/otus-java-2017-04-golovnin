@@ -7,7 +7,7 @@
         var ws = new WebSocket("ws://localhost:8080/socket");
 
 ws.onopen = function(){
-    document.getElementById("status").innerHTML = "<p>Open</p>";
+
 };
 
 ws.onmessage = function (evt){
@@ -20,7 +20,7 @@ ws.onmessage = function (evt){
 
 function cleanUsersBoard(){
     var usersBoard = document.getElementById("usersBoard");
-    usersBoard.innerHTML = "<p>Users:</p>";
+    usersBoard.innerHTML = "";
 };
 
 function printUserData(user){
@@ -28,7 +28,6 @@ function printUserData(user){
 
     var userDiv = document.createElement("div");
     userDiv.setAttribute("id", user.id);
-    userDiv.setAttribute("style", "");
     usersBoard.appendChild(userDiv);
 
     var userName = document.createElement("span");
@@ -41,10 +40,10 @@ function printUserData(user){
 };
 
 ws.onclose = function(evt){
-    document.getElementById("status").innerHTML = "<p>Connection to server is lost!</p>";
+
 };
 ws.onerror = function(error){
-    document.getElementById("status").innerHTML = "<p>Error</p>";
+
 };
 
 function addUser(){
@@ -71,12 +70,14 @@ function removeUser(id){
     </script>
 </head>
 <body>
-<form>
-    <p>name:<input type="text" id="name" autocomplete="off"></p>
-    <p>age:<input type="text" id="age" autocomplete="off"></p>
-    <p><input type="button" value="add" onclick=addUser()></p>
-</form>
-<div id="usersBoard" style="border: solid 1px black;"></div>
-<div id="status"></div>
+<div style="margin-bottom: 20px;">
+    <div style="margin: 5px;">Add user:</div>
+    <form>
+    <div style="margin: 3px;">name:<input type="text" id="name" autocomplete="off" size="10"></div>
+    <div style="margin: 3px;">age:<input type="text" id="age" autocomplete="off" size="3"></div>
+    <div style="margin-top: 7px;"><input type="button" value="add" onclick=addUser()></div>
+    </form>
+</div>
+<div id="usersBoard"></div>
 </body>
 </html>

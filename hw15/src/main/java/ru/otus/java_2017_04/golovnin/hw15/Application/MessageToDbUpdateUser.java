@@ -33,7 +33,7 @@ public class MessageToDbUpdateUser extends AbstractMessageToDb{
             if(consumer != null) consumer.accept(addressee);
             addressee.getMessageSystem().sendMessage(
                     new MessageToFrontendAllUsers(addressee.getAddress(), users),
-                    getFromAddress());
+                    "Clients notificator");
         };
     }
 

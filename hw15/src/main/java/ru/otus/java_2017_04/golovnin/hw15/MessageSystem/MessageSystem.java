@@ -43,13 +43,17 @@ public class MessageSystem {
 
     public Address registerService(String serviceName, Object service){
         Address address = registerAddressee(service);
-        serviceAddresses.put(serviceName, address);
+        if(address != null) {
+            serviceAddresses.put(serviceName, address);
+        }
         return address;
     }
 
     public void sendMessage(Message message, String serviceName){
         Address toAddress;
         toAddress = serviceAddresses.get(serviceName);
-        sendMessage(message, toAddress);
+        if(toAddress != null) {
+            sendMessage(message, toAddress);
+        }
     }
 }

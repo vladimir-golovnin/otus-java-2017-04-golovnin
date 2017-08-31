@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="DbServiceCache" class="ru.otus.java_2017_04.golovnin.hw16.Cache.MyCache">
+        <constructor-arg value="9"/>
+        <constructor-arg value="60000"/>
+        <constructor-arg value="45000"/>
+    </bean>
+
+    <bean id="DbService" class="ru.otus.java_2017_04.golovnin.hw16.DbService.MySqlDbService">
+        <constructor-arg ref="DbServiceCache"/>
+    </bean>
+
+    <bean id="TemplateProcessor" class="ru.otus.java_2017_04.golovnin.hw16.Frontend.FreemarkerTemplateProcessor">
+        <constructor-arg value="/templates/"/>
+    </bean>
+
+    <bean id="AuthenticationService" class="ru.otus.java_2017_04.golovnin.hw16.Frontend.EmptyAuthService">
+        <constructor-arg>
+            <props>
+                <prop key="Vladimir">123</prop>
+                <prop key="Vitaliy">tully</prop>
+            </props>
+        </constructor-arg>
+    </bean>
+
+    <bean id="AddressProvider" class="ru.otus.java_2017_04.golovnin.hw16.MessageSystem.AddressProvider">
+        <constructor-arg value="4"/>
+    </bean>
+
+    <bean id="MessageSystem" class="ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageSystem">
+        <constructor-arg ref="AddressProvider"/>
+    </bean>
+
+    <bean id="SocketCreator" class="ru.otus.java_2017_04.golovnin.hw16.Application.MySocketCreator">
+        <constructor-arg ref="MessageSystem"/>
+    </bean>
+
+    <bean id="ApplicationContext" class="ru.otus.java_2017_04.golovnin.hw16.Application.ApplicationContext">
+        <constructor-arg ref="MessageSystem"/>
+        <property name="dbService" ref="DbService"/>
+        <property name="clientsNotificationService" ref="SocketCreator"/>
+    </bean>
+</beans>

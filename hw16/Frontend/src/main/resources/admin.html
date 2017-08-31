@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Manage Users</title>
+    <script>
+        var ws = new WebSocket("ws://localhost:8080/socket");
+
+ws.onopen = function(){
+
+};
+
+ws.onmessage = function (evt){
+    var message = JSON.parse(evt.data);
+    cleanUsersBoard();
+    message.forEach(function(entry){
+            printUserData(entry);
+        });
+};
+
+function cleanUsersBoard(){
+    var usersBoard = document.getElementById("usersBoard");
+    usersBoard.innerHTML = "";
+};
+
+function printUserData(user){
+    var usersBoard = document.getElementById("usersBoard");
+
+    var userDiv = document.createElement("div");
+    userDiv.setAttribute("id", user.id);
+    usersBoard.appendChild(userDiv);
+
+    var userName = document.createElement("span");
+    userName.innerHTML = user.name + ", " + user.age + " ";
+    userDiv.appendChild(userName);
+
+    var removeUser = document.createElement("span");
+    removeUser.innerHTML = "<a href=\"#\" OnClick=removeUser(" + user.id + ")>x</a>";
+    userDiv.appendChild(removeUser);
+};
+
+ws.onclose = function(evt){
+
+};
+ws.onerror = function(error){
+
+};
+
+function addUser(){
+    var name = document.getElementById("name").value;
+    var age = document.getElementById("age").value;
+    if(name != "" && age != ""){
+        var userAction = {
+            action: 1,
+            user: { id: 0, name: name, age: age}
+        };
+        ws.send(JSON.stringify(userAction));
+    }
+};
+
+function removeUser(id){
+    if(!isNaN(id)){
+        var userAction = {
+            action: 2,
+            user: { id: id, name: "", age: 0}
+        };
+        ws.send(JSON.stringify(userAction));
+    }
+};
+    </script>
+</head>
+<body>
+<div style="margin-bottom: 20px;">
+    <div style="margin: 5px;">Add user:</div>
+    <form>
+    <div style="margin: 3px;">name:<input type="text" id="name" autocomplete="off" size="10"></div>
+    <div style="margin: 3px;">age:<input type="text" id="age" autocomplete="off" size="3"></div>
+    <div style="margin-top: 7px;"><input type="button" value="add" onclick=addUser()></div>
+    </form>
+</div>
+<div id="usersBoard"></div>
+</body>
+</html>

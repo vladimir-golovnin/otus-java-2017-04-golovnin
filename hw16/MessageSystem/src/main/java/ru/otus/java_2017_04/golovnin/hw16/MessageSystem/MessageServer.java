@@ -1,22 +1,21 @@
-package ru.otus.java_2017_04.golovnin.hw16;
+package ru.otus.java_2017_04.golovnin.hw16.MessageSystem;
 
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 
 public class MessageServer{
     private boolean isActive = true;
     private static final int WORKERS_NUM = 1;
-    private final List<ClientChannel> clientChannels = Collections.synchronizedList(new ArrayList<>());
-    private final MessageProcessor messageProcessor;
 
-    public MessageServer(MessageProcessor processor){
+    private final MessageProcessor messageProcessor;
+    private final RouteTable routeTable;
+
+    public MessageServer(MessageProcessor processor, RouteTable routeTable){
         this.messageProcessor = processor;
+        this.routeTable = routeTable;
     }
 
     public void start(int port){
@@ -24,8 +23,8 @@ public class MessageServer{
             while (isActive){
                 Socket clientSocket = serverSocket.accept();
                 ClientChannel clientChannel = new ClientChannel(clientSocket);
-                clientChannels.add(clientChannel);
-                clientChannel.setOnShutdownListener(() -> clientChannels.remove(clientChannel));
+                routeTable.addChannel(clientChannel);
+                clientChannel.setOnShutdownListener(routeTable::removeChannel);
                 clientChannel.setOnMessageReceivedListener(messageProcessor);
                 clientChannel.start();
             }

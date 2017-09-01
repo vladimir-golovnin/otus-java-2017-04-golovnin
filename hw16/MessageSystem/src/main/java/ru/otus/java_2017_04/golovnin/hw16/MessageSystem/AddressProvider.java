@@ -31,4 +31,8 @@ public class AddressProvider {
             putAddress(addr);
         }
     }
+
+    public int getAvailableAddressesCount(){
+        return addressPool.size();
+    }
 }

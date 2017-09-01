@@ -1,11 +1,11 @@
-package ru.otus.java_2017_04.golovnin.hw16;
+package ru.otus.java_2017_04.golovnin.hw16.MessageSystem;
 
 
 public class AllocateAddressesMessage extends Message {
-    public static final String TYPE = "AllocateAddresses";
+    public static final String ADDRESSES_NUM_FIELD_NAME = "addressesNum";
     private final int addressesNum;
+
     public AllocateAddressesMessage(int num) {
-        super(TYPE);
         addressesNum = num;
     }
 }

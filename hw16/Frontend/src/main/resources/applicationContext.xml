@@ -28,7 +28,7 @@
     </bean>
 
     <bean id="AddressProvider" class="ru.otus.java_2017_04.golovnin.hw16.MessageSystem.AddressProvider">
-        <constructor-arg value="4"/>
+        <constructor-arg value="0"/>
     </bean>
 
     <bean id="MessageSystem" class="ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageSystem">
@@ -39,9 +39,4 @@
         <constructor-arg ref="MessageSystem"/>
     </bean>
 
-    <bean id="ApplicationContext" class="ru.otus.java_2017_04.golovnin.hw16.Application.ApplicationContext">
-        <constructor-arg ref="MessageSystem"/>
-        <property name="dbService" ref="DbService"/>
-        <property name="clientsNotificationService" ref="SocketCreator"/>
-    </bean>
 </beans>

@@ -6,8 +6,8 @@ import java.util.Map;
 
 public class MessageSystem {
     private final Map<Address, Addressee> addresses = Collections.synchronizedMap(new HashMap<>());
-    private final Map<String, Address> serviceAddresses = Collections.synchronizedMap(new HashMap<>());
     private final AddressProvider addressProvider;
+    private GateWay gateWay;
 
     public MessageSystem(AddressProvider addressProvider){
         this.addressProvider = addressProvider;
@@ -39,21 +39,22 @@ public class MessageSystem {
         if(toAddressee != null){
             toAddressee.receiveMessage(message);
         }
+        else gateWay.send(message, toAddress);
     }
 
-    public Address registerService(String serviceName, Object service){
+    public Address registerService(String serviceName, ServiceType type, Object service){
         Address address = registerAddressee(service);
         if(address != null) {
-            serviceAddresses.put(serviceName, address);
+            gateWay.registerService(serviceName, type, address);
         }
         return address;
     }
 
     public void sendMessage(Command message, String serviceName){
-        Address toAddress;
-        toAddress = serviceAddresses.get(serviceName);
-        if(toAddress != null) {
-            sendMessage(message, toAddress);
-        }
+        gateWay.sendToService(message, serviceName);
+    }
+
+    public void setGateWay(GateWay gateWay) {
+        this.gateWay = gateWay;
     }
 }

@@ -14,6 +14,7 @@ import ru.otus.java_2017_04.golovnin.hw16.Frontend.LoginServlet;
 import ru.otus.java_2017_04.golovnin.hw16.Frontend.SocketHandler;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.Address;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageSystem;
+import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.ServiceType;
 
 public class FrontendServer {
 
@@ -66,7 +67,10 @@ public class FrontendServer {
                      } catch (InterruptedException e) {
                          e.printStackTrace();
                      }
-                } while (messageSystem.registerService(NOTIFICATION_SERVICE_NAME, notificator) == null);
+                } while (messageSystem.registerService(
+                        NOTIFICATION_SERVICE_NAME,
+                         ServiceType.BROADCAST,
+                         notificator) == null);
             }).start();
 
             new Thread(() -> {
@@ -76,7 +80,7 @@ public class FrontendServer {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                } while (messageSystem.registerService("Data base", dbService) == null);
+                } while (messageSystem.registerService("Data base", ServiceType.SINGLE, dbService) == null);
             }).start();
         }
     }

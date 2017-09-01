@@ -1,11 +1,17 @@
-package ru.otus.java_2017_04.golovnin.hw16.MessageSystem;
+package ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageHandlers;
 
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.Address;
+import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.AddressProvider;
+import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.ClientChannel;
+import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.Messages.AddressesProvideMessage;
+import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.Messages.AllocateAddressesMessage;
+import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.Messages.Message;
 
 
-public class AllocateAddressesMessageHandler implements MessageHandler{
+public class AllocateAddressesMessageHandler implements MessageHandler {
     private final Gson gson = new Gson();
     private final AddressProvider addressProvider;
 

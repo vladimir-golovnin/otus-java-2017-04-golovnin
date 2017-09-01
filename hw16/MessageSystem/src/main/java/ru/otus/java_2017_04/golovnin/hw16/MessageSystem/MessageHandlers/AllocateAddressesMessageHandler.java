@@ -3,6 +3,7 @@ package ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageHandlers;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.Address;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.AddressProvider;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.ClientChannel;
@@ -12,7 +13,9 @@ import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.Messages.Message;
 
 
 public class AllocateAddressesMessageHandler implements MessageHandler {
-    private final Gson gson = new Gson();
+    private static final JsonParser parser = new JsonParser();
+    private static final Gson gson = new Gson();
+
     private final AddressProvider addressProvider;
 
     public AllocateAddressesMessageHandler(AddressProvider addressProvider){
@@ -20,8 +23,9 @@ public class AllocateAddressesMessageHandler implements MessageHandler {
     }
 
     @Override
-    public void processMessage(JsonObject jsonObject, ClientChannel channel) {
-        if(jsonObject != null && channel != null){
+    public void processMessage(String msg, ClientChannel channel) {
+        if(msg != null && channel != null){
+            JsonObject jsonObject = (JsonObject) parser.parse(msg);
             String messageType = jsonObject.get(Message.TYPE_FIELD).getAsString();
             if(messageType.equals(AllocateAddressesMessage.class.getSimpleName())){
 

@@ -6,6 +6,6 @@ import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.ClientChannel;
 
 public interface MessageHandler {
 
-    public void processMessage(JsonObject jsonObject, ClientChannel channel);
+    public void processMessage(String msg, ClientChannel channel);
 
 }

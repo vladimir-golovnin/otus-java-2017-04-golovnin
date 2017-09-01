@@ -13,10 +13,10 @@ public class RegisterServiceMessageHandler implements MessageHandler {
     }
 
     @Override
-    public void processMessage(JsonObject jsonObject, ClientChannel channel) {
-        if(jsonObject != null && channel != null){
+    public void processMessage(String msg, ClientChannel channel) {
+        if(msg != null){
             RegisterServiceMessage reconstructedMessage =
-                    JsonToMessageObjConverter.convert(jsonObject, RegisterServiceMessage.class);
+                    JsonToMessageObjConverter.convert(msg, RegisterServiceMessage.class);
             serviceRegistry.register(
                     reconstructedMessage.getServiceName(),
                     reconstructedMessage.getServiceType(),

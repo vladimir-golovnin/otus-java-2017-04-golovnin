@@ -42,9 +42,9 @@ public class AddressProviderWatcher implements MessageHandler {
     }
 
     @Override
-    public void processMessage(JsonObject jsonObject, ClientChannel channel) {
-        if(jsonObject != null && channel != null){
-            AddressesProvideMessage message = gson.fromJson(jsonObject, AddressesProvideMessage.class);
+    public void processMessage(String msg, ClientChannel channel) {
+        if(msg != null){
+            AddressesProvideMessage message = gson.fromJson(msg, AddressesProvideMessage.class);
             List<Address> providedAddresses = message.getAddresses();
             providedAddresses.forEach(addressProvider::putAddress);
         }

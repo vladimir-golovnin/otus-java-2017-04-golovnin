@@ -21,6 +21,6 @@ public class MessageProcessor {
         JsonObject jsonObject = (JsonObject) parser.parse(message);
         String messageType = jsonObject.get(Message.TYPE_FIELD).getAsString();
         MessageHandler handler = handlers.get(messageType);
-        if(handler != null) handler.processMessage(jsonObject, source);
+        if(handler != null) handler.processMessage(message, source);
     }
 }

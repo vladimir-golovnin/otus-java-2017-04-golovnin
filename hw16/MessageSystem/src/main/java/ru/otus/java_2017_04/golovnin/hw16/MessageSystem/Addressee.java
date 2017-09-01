@@ -8,13 +8,15 @@ public class Addressee {
     private static final int MESSAGE_QUEUE_CAPACITY = 32;
     private static final long QUEUE_SERVICE_DEFAULT_PERIOD_MILLIS = 10;
 
-
-
     private MessageSystem messageSystem;
     private Address address;
     private Object client;
     private long queueServicePeriodMillis = QUEUE_SERVICE_DEFAULT_PERIOD_MILLIS;
-    private float workload = 0;
+
+    private static final byte MIN_LOAD = 0;
+    private static final byte MAX_LOAD = 100;
+    private byte workload = MIN_LOAD;
+
     private boolean livingIsPermitted;
 
     private Queue<Command> messageQueue = new ArrayBlockingQueue<>(MESSAGE_QUEUE_CAPACITY);
@@ -32,6 +34,7 @@ public class Addressee {
     public MessageSystem getMessageSystem() {
         return messageSystem;
     }
+
     public final void setQueueServicePeriod(long queueServicePeriodMillis) {
         this.queueServicePeriodMillis = queueServicePeriodMillis;
     }
@@ -50,7 +53,11 @@ public class Addressee {
                 }
                 long processEndTime = System.currentTimeMillis();
                 long processDurationMillis = processEndTime - processStartTime;
-                workload = (float) processDurationMillis / queueServicePeriodMillis;
+
+                if(queueServicePeriodMillis > processDurationMillis) {
+                    workload = (byte)((processDurationMillis * MAX_LOAD) / queueServicePeriodMillis);
+                } else workload = MAX_LOAD;
+
                 if(!livingIsPermitted) break;
                 long spareTime = queueServicePeriodMillis - processDurationMillis;
                 if(spareTime > 0) {
@@ -68,7 +75,7 @@ public class Addressee {
         livingIsPermitted = false;
     }
 
-    public float getWorkload() {
+    public byte getWorkload() {
         return workload;
     }
 

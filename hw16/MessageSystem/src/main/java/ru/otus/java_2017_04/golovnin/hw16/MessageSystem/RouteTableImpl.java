@@ -10,6 +10,8 @@ import java.util.Map;
 public class RouteTableImpl implements RouteTable {
     private final Map<Address, ClientChannel> routeMap = Collections.synchronizedMap(new HashMap<>());
     private final Map<ClientChannel, List<Address>> clientAddressesMap = Collections.synchronizedMap(new HashMap<>());
+    private final Map<Address, Byte> workloadMap = Collections.synchronizedMap(new HashMap<>());
+
     private final AddressProvider addressProvider;
 
     public RouteTableImpl(AddressProvider addressProvider){
@@ -30,11 +32,26 @@ public class RouteTableImpl implements RouteTable {
                 List<Address> addresses = clientAddressesMap.get(channel);
                 addresses.forEach(address -> {
                     routeMap.remove(address);
+                    workloadMap.remove(address);
                     addressProvider.putAddress(address);
                 });
                 clientAddressesMap.remove(channel);
             }
         }
+    }
+
+    @Override
+    public byte getWorkloadForAddress(Address address) {
+        if(address != null){
+            Byte result = workloadMap.get(address);
+            if(result != null) return result;
+        }
+        return MAX_WORKLOAD;
+    }
+
+    @Override
+    public void submitWorkload(Address address, byte workload) {
+        workloadMap.put(address, workload);
     }
 
     @Override
@@ -44,6 +61,7 @@ public class RouteTableImpl implements RouteTable {
             address = addressProvider.getAddress();
             clientAddressesMap.get(channel).add(address);
             routeMap.put(address, channel);
+            workloadMap.put(address, MAX_WORKLOAD);
         }
         return address;
     }

@@ -15,12 +15,12 @@ public class GateWay {
     }
 
     public void send(Command cmd, Address address){
-        DirectMessage message = new DirectMessage(address, gson.toJson(cmd));
+        DirectMessage message = new DirectMessage(address, cmd.getClass().getSimpleName(), gson.toJson(cmd));
         packer.sendMessage(message);
     }
 
     public void sendToService(Command cmd, String serviceName){
-        ServiceMessage message = new ServiceMessage(serviceName, gson.toJson(cmd));
+        ServiceMessage message = new ServiceMessage(serviceName, cmd.getClass().getSimpleName(), gson.toJson(cmd));
         packer.sendMessage(message);
     }
 

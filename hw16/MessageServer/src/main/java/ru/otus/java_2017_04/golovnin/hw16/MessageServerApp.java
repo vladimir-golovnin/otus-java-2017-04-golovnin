@@ -11,6 +11,7 @@ import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageServer;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.Messages.DirectMessage;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.Messages.RegisterServiceMessage;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageHandlers.RegisterServiceMessageHandler;
+import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.Messages.ServiceMessage;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.RouteTable;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.RouteTableImpl;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.ServiceRegistry;
@@ -22,19 +23,18 @@ public class MessageServerApp
         AddressProvider addressProvider = new AddressProvider(32);
         ServiceRegistry serviceRegistry = new ServiceRegistry();
         MessageProcessor messageProcessor = new MessageProcessor();
+        RouteTable routeTable = new RouteTableImpl(addressProvider);
 
         messageProcessor.setHandler(AllocateAddressesMessage.class.getSimpleName(),
-                new AllocateAddressesMessageHandler(addressProvider));
+                new AllocateAddressesMessageHandler(routeTable));
 
         messageProcessor.setHandler(RegisterServiceMessage.class.getSimpleName(),
                 new RegisterServiceMessageHandler(serviceRegistry));
 
-        RouteTable routeTable = new RouteTableImpl(addressProvider);
-
         messageProcessor.setHandler(DirectMessage.class.getSimpleName(),
                 new DirectMessageHandler(routeTable));
 
-        messageProcessor.setHandler(DirectMessage.class.getSimpleName(),
+        messageProcessor.setHandler(ServiceMessage.class.getSimpleName(),
                 new ServiceMessageHandler(serviceRegistry, routeTable));
 
         MessageServer server = new MessageServer(messageProcessor, routeTable);

@@ -3,14 +3,21 @@ package ru.otus.java_2017_04.golovnin.hw16;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ru.otus.java_2017_04.golovnin.hw16.Application.CommandToDbAddUser;
+import ru.otus.java_2017_04.golovnin.hw16.Application.CommandToDbRemoveUser;
+import ru.otus.java_2017_04.golovnin.hw16.Application.CommandToDbUpdateUser;
+import ru.otus.java_2017_04.golovnin.hw16.Application.CommandToFrontendAllUsers;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.AddressProvider;
+import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.CommandProcessor;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageHandlers.AddressProviderWatcher;
+import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageHandlers.DirectMessageLocalHandler;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.Messages.AddressesProvideMessage;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.GateWay;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageClient;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessagePacker;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageProcessor;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageSystem;
+import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.Messages.DirectMessage;
 
 public class FrontendApp
 {
@@ -33,6 +40,14 @@ public class FrontendApp
 
         AddressProviderWatcher watcher = new AddressProviderWatcher(addressProvider, messagePacker);
         messageProcessor.setHandler(AddressesProvideMessage.class.getSimpleName(), watcher);
+
+        CommandProcessor cmdProcessor = new CommandProcessor(ms);
+        cmdProcessor.addCommand(CommandToDbAddUser.class);
+        cmdProcessor.addCommand(CommandToDbRemoveUser.class);
+        cmdProcessor.addCommand(CommandToDbUpdateUser.class);
+        cmdProcessor.addCommand(CommandToFrontendAllUsers.class);
+        DirectMessageLocalHandler directMessageLocalHandler = new DirectMessageLocalHandler(cmdProcessor);
+        messageProcessor.setHandler(DirectMessage.class.getSimpleName(), directMessageLocalHandler);
 
         messageClient.start("localhost", 5050);
         watcher.start();

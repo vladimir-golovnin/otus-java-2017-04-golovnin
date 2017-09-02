@@ -58,5 +58,6 @@ public class DbServerApp
                 }
             } while (messageSystem.registerService("Data base", ServiceType.SINGLE, dbService) == null);
         }).start();
+        System.out.println("DB Server started");
     }
 }

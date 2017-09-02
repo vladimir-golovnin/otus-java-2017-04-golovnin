@@ -6,14 +6,15 @@ import java.io.IOException;
 public class FrontendStarter {
 
     public static void start(int port){
-            ProcessBuilder processBuilder = new ProcessBuilder(
-                    "java", "-jar", "../Frontend/target/Frontend.jar",
-                    Integer.toString(port));
-            try {
-                processBuilder.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        ProcessBuilder processBuilder = new ProcessBuilder(
+                "java", "-jar", "../Frontend/target/Frontend.jar",
+                Integer.toString(port));
+        System.out.println("Starting frontend server");
+        try {
+            processBuilder.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

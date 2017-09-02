@@ -55,6 +55,7 @@ public class FrontendApp
         int frontendServerPort = Integer.parseUnsignedInt(args[0]);
         FrontendServer frontendServer = new FrontendServer(appContext);
         frontendServer.start(frontendServerPort);
+        System.out.println("Frontend started on port " + frontendServerPort);
     }
 
 

@@ -1,4 +1,4 @@
-package ru.otus.java_2017_04.golovnin.hw16.Application;
+package ru.otus.java_2017_04.golovnin.hw16.Frontend;
 
 
 import com.google.gson.Gson;
@@ -10,9 +10,9 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
-import ru.otus.java_2017_04.golovnin.hw16.Frontend.ClientsNotificator;
-import ru.otus.java_2017_04.golovnin.hw16.Frontend.UserActionMessage;
-import ru.otus.java_2017_04.golovnin.hw16.Frontend.UserData;
+import ru.otus.java_2017_04.golovnin.hw16.Commands.CommandToDbAddUser;
+import ru.otus.java_2017_04.golovnin.hw16.Commands.CommandToDbRemoveUser;
+import ru.otus.java_2017_04.golovnin.hw16.Commands.CommandToDbUpdateUser;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.Address;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageSystem;
 

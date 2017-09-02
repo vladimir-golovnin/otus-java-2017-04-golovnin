@@ -3,16 +3,13 @@ package ru.otus.java_2017_04.golovnin.hw16;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.otus.java_2017_04.golovnin.hw16.DbService.DbService;
 import ru.otus.java_2017_04.golovnin.hw16.Frontend.AdminServlet;
 import ru.otus.java_2017_04.golovnin.hw16.Frontend.ClientsNotificator;
 import ru.otus.java_2017_04.golovnin.hw16.Frontend.FormServlet;
 import ru.otus.java_2017_04.golovnin.hw16.Frontend.LoginServlet;
 import ru.otus.java_2017_04.golovnin.hw16.Frontend.SocketHandler;
-import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.Address;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageSystem;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.ServiceType;
 
@@ -22,7 +19,6 @@ public class FrontendServer {
     private static final String ADMIN_SERVLET_PATH = "/";
     private static final String LOGIN_SERVLET_PATH = "/auth";
     private static final String SOCKET_SERVLET_PATH = "/socket";
-    private static final String APP_CONTEXT_FILE = "applicationContext.xml";
     private static final String APP_CONTEXT_ATTRIBUTE_NAME = "appContext";
     private static final String AUTH_SERVICE_BEAN_NAME = "AuthenticationService";
     private static final String AUTH_SERVICE_ATTRIBUTE_NAME = "authService";
@@ -59,7 +55,6 @@ public class FrontendServer {
         if(server.isRunning()){
             MessageSystem messageSystem = (MessageSystem) appContext.getBean("MessageSystem");
             ClientsNotificator notificator = (ClientsNotificator)appContext.getBean("SocketCreator");
-            DbService dbService = (DbService)appContext.getBean("DbService");
             new Thread(() -> {
                  do{
                      try {
@@ -73,15 +68,7 @@ public class FrontendServer {
                          notificator) == null);
             }).start();
 
-            new Thread(() -> {
-                do{
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                } while (messageSystem.registerService("Data base", ServiceType.SINGLE, dbService) == null);
-            }).start();
+
         }
     }
 }

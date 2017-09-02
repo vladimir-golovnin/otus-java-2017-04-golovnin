@@ -4,15 +4,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="DbServiceCache" class="ru.otus.java_2017_04.golovnin.hw16.Cache.MyCache">
-        <constructor-arg value="9"/>
-        <constructor-arg value="60000"/>
-        <constructor-arg value="45000"/>
-    </bean>
-
-    <bean id="DbService" class="ru.otus.java_2017_04.golovnin.hw16.DbService.MySqlDbService">
-        <constructor-arg ref="DbServiceCache"/>
-    </bean>
 
     <bean id="TemplateProcessor" class="ru.otus.java_2017_04.golovnin.hw16.Frontend.FreemarkerTemplateProcessor">
         <constructor-arg value="/templates/"/>
@@ -35,7 +26,7 @@
         <constructor-arg ref="AddressProvider"/>
     </bean>
 
-    <bean id="SocketCreator" class="ru.otus.java_2017_04.golovnin.hw16.Application.MySocketCreator">
+    <bean id="SocketCreator" class="ru.otus.java_2017_04.golovnin.hw16.Frontend.MySocketCreator">
         <constructor-arg ref="MessageSystem"/>
     </bean>
 

@@ -1,47 +1,44 @@
 package ru.otus.java_2017_04.golovnin.hw16;
 
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ru.otus.java_2017_04.golovnin.hw16.Cache.MyCache;
 import ru.otus.java_2017_04.golovnin.hw16.Commands.CommandToDbAddUser;
 import ru.otus.java_2017_04.golovnin.hw16.Commands.CommandToDbRemoveUser;
 import ru.otus.java_2017_04.golovnin.hw16.Commands.CommandToDbUpdateUser;
 import ru.otus.java_2017_04.golovnin.hw16.Commands.CommandToFrontendAllUsers;
+import ru.otus.java_2017_04.golovnin.hw16.DbService.DbService;
+import ru.otus.java_2017_04.golovnin.hw16.DbService.MySqlDbService;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.AddressProvider;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.CommandProcessor;
-import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageHandlers.AddressProviderWatcher;
-import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageHandlers.DirectMessageLocalHandler;
-import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.Messages.AddressesProvideMessage;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.GateWay;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageClient;
+import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageHandlers.AddressProviderWatcher;
+import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageHandlers.DirectMessageLocalHandler;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessagePacker;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageProcessor;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.MessageSystem;
+import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.Messages.AddressesProvideMessage;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.Messages.DirectMessage;
+import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.ServiceType;
 
-public class FrontendApp
+public class DbServerApp
 {
-    private static final String APP_CONTEXT_FILE = "applicationContext.xml";
-    private static final String ADDRESS_PROVIDER_BEAN_NAME = "AddressProvider";
-    private static final String MESSAGE_SYSTEM_BEAN_NAME = "MessageSystem";
-
     public static void main( String[] args )
     {
-        ApplicationContext appContext = new ClassPathXmlApplicationContext(APP_CONTEXT_FILE);
-        AddressProvider addressProvider = (AddressProvider) appContext.getBean(ADDRESS_PROVIDER_BEAN_NAME);
+        DbService dbService = new MySqlDbService(new MyCache(9, 60000, 45000));
+
+        AddressProvider addressProvider = new AddressProvider(0);
+        MessageSystem messageSystem = new MessageSystem(addressProvider);
 
         MessageProcessor messageProcessor = new MessageProcessor();
         MessageClient messageClient = new MessageClient(messageProcessor);
         MessagePacker messagePacker = new MessagePacker(messageClient);
-
         GateWay gateWay = new GateWay(messagePacker);
-        MessageSystem ms = (MessageSystem)appContext.getBean(MESSAGE_SYSTEM_BEAN_NAME);
-        ms.setGateWay(gateWay);
+        messageSystem.setGateWay(gateWay);
 
-        AddressProviderWatcher watcher = new AddressProviderWatcher(addressProvider, messagePacker);
-        messageProcessor.setHandler(AddressesProvideMessage.class.getSimpleName(), watcher);
+        AddressProviderWatcher addressProviderWatcher = new AddressProviderWatcher(addressProvider, messagePacker);
+        messageProcessor.setHandler(AddressesProvideMessage.class.getSimpleName(), addressProviderWatcher);
 
-        CommandProcessor cmdProcessor = new CommandProcessor(ms);
+        CommandProcessor cmdProcessor = new CommandProcessor(messageSystem);
         cmdProcessor.addCommand(CommandToDbAddUser.class);
         cmdProcessor.addCommand(CommandToDbRemoveUser.class);
         cmdProcessor.addCommand(CommandToDbUpdateUser.class);
@@ -50,12 +47,16 @@ public class FrontendApp
         messageProcessor.setHandler(DirectMessage.class.getSimpleName(), directMessageLocalHandler);
 
         messageClient.start("localhost", 5050);
-        watcher.start();
+        addressProviderWatcher.start();
 
-        int frontendServerPort = Integer.parseUnsignedInt(args[0]);
-        FrontendServer frontendServer = new FrontendServer(appContext);
-        frontendServer.start(frontendServerPort);
+        new Thread(() -> {
+            do{
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } while (messageSystem.registerService("Data base", ServiceType.SINGLE, dbService) == null);
+        }).start();
     }
-
-
 }

@@ -19,18 +19,21 @@ public class MessageServer{
     }
 
     public void start(int port){
-        try(ServerSocket serverSocket = new ServerSocket(port)){
-            while (isActive){
-                Socket clientSocket = serverSocket.accept();
-                ClientChannel clientChannel = new ClientChannel(clientSocket);
-                routeTable.addChannel(clientChannel);
-                clientChannel.setOnShutdownListener(routeTable::removeChannel);
-                clientChannel.setOnMessageReceivedListener(messageProcessor);
-                clientChannel.start();
+        new Thread(() -> {
+            try(ServerSocket serverSocket = new ServerSocket(port)){
+
+                while (isActive){
+                    Socket clientSocket = serverSocket.accept();
+                    ClientChannel clientChannel = new ClientChannel(clientSocket);
+                    routeTable.addChannel(clientChannel);
+                    clientChannel.setOnShutdownListener(routeTable::removeChannel);
+                    clientChannel.setOnMessageReceivedListener(messageProcessor);
+                    clientChannel.start();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
 
 }

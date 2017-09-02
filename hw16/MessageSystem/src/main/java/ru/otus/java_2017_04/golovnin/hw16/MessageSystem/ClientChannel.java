@@ -43,7 +43,6 @@ public class ClientChannel {
                             break;
                         case END_CHAR:
                             String receivedMessage = messageBuilder.toString();
-                            System.out.println(receivedMessage);
                             onMessageReceivedListener.processMessage(receivedMessage, this);
                             int builderSize = messageBuilder.length();
                             messageBuilder = new StringBuilder(builderSize);

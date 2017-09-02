@@ -16,11 +16,13 @@ import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.RouteTable;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.RouteTableImpl;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.ServiceRegistry;
 
+import java.io.IOException;
+
 public class MessageServerApp
 {
     public static void main( String[] args )
     {
-        AddressProvider addressProvider = new AddressProvider(32);
+        AddressProvider addressProvider = new AddressProvider(100);
         ServiceRegistry serviceRegistry = new ServiceRegistry();
         MessageProcessor messageProcessor = new MessageProcessor();
         RouteTable routeTable = new RouteTableImpl(addressProvider);
@@ -40,5 +42,21 @@ public class MessageServerApp
         MessageServer server = new MessageServer(messageProcessor, routeTable);
 
         server.start(5050);
+
+
+        String FRONT_START_COMMAND = "java -jar ../Frontend/target/Frontend.jar 8080";
+        String DB_START_COMMAND = "java -jar ../DbServer/target/DbServer.jar";
+        ProcessBuilder processBuilder  = new ProcessBuilder(DB_START_COMMAND.split(" "));
+        try {
+            processBuilder.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        processBuilder.command(FRONT_START_COMMAND.split(" "));
+        try {
+            processBuilder.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

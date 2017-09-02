@@ -43,20 +43,9 @@ public class MessageServerApp
 
         server.start(5050);
 
-
-        String FRONT_START_COMMAND = "java -jar ../Frontend/target/Frontend.jar 8080";
-        String DB_START_COMMAND = "java -jar ../DbServer/target/DbServer.jar";
-        ProcessBuilder processBuilder  = new ProcessBuilder(DB_START_COMMAND.split(" "));
-        try {
-            processBuilder.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        processBuilder.command(FRONT_START_COMMAND.split(" "));
-        try {
-            processBuilder.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        DbStarter.start();
+        DbStarter.start();
+        FrontendStarter.start(8080);
+        FrontendStarter.start(8081);
     }
 }

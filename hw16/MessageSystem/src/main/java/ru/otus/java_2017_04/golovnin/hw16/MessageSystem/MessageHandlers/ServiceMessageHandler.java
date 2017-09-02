@@ -12,7 +12,11 @@ import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.RouteTable;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.ServiceRecord;
 import ru.otus.java_2017_04.golovnin.hw16.MessageSystem.ServiceRegistry;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 public class ServiceMessageHandler implements MessageHandler {
@@ -62,11 +66,13 @@ public class ServiceMessageHandler implements MessageHandler {
 
     private Address chooseAddress(Collection<Address> addresses){
         Address result = null;
-        byte minload = routeTable.MAX_WORKLOAD;
-        for (Address address: addresses
-             ) {
-            if(routeTable.getWorkloadForAddress(address) <= minload) result = address;
+        if(addresses.size() > 0){
+            Random random = new Random(System.currentTimeMillis());
+            int i = random.nextInt(addresses.size());
+            List<Address> addressList = new ArrayList<>(addresses);
+            result = addressList.get(i);
         }
+
         return result;
     }
 }
